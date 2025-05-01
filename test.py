@@ -15,3 +15,5 @@ APNUM = deBR.gen_apNum(ALPHABET,WINDOWDIM)
 
 # Generates generic shifter
 A = deBR.gen_shifter(WINDOWDIM)
+
+# testing
