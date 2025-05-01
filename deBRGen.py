@@ -16,7 +16,7 @@ def gen_initWindow(W,VERBOSE = False):
   W0[-1,-1] = 1
   W0 = W0.reshape((-1, 1), order="F") # effectively the vec command
   if VERBOSE:
-    print(f"Initial window for size {WINDOWDIM}: \n {W0}")
+    print(f"Initial window for size {W}: \n {W0}")
   return(W0)
 
 # INPUT: A,W (Alphabet size, Window width)
