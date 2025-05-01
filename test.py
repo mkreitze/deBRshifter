@@ -17,3 +17,4 @@ APNUM = deBR.gen_apNum(ALPHABET,WINDOWDIM)
 A = deBR.gen_shifter(WINDOWDIM)
 
 # testing
+# testing given pc
