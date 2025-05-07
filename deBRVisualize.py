@@ -4,7 +4,7 @@ import numpy as np
 import deBRGen
 import deBRValidation
 
-def test_deBRs(A,W,apN,wantData,wantSuccessful):
+def test_deBRs(A,W,apN,wantData,wantSuccessful, allPrint = False):
   data = [];
   shifters = []; circComps = []; colFacts = []; colExpansions = []; uniqueness = []; perodicities = []; consistencies = []; powers = []; deBRs = [];
   allSs = deBRGen.gen_allShifter(A,W)
@@ -14,7 +14,7 @@ def test_deBRs(A,W,apN,wantData,wantSuccessful):
     isConsistent = deBRValidation.check_consistency(deBR,shifter[0],A,W)
     pow = deBRValidation.get_cyclen(shifter[0],A,apN,W)
     isUnique = deBRValidation.check_unique(deBR,A,W,apN)
-    if ALLPRINT:
+    if allPrint:
       print(f"Shifter used (circs composition): \n {shifter[0]} {shifter[1]}")
       print(f"Col factors: \n {factors}")
       print(f"Col base expansions: \n {expanded}")
@@ -31,6 +31,35 @@ def test_deBRs(A,W,apN,wantData,wantSuccessful):
       # data stored as [ shifter, circs, col factors, col expansions, uniquness, perodicity, consistency, power, deBR]
   data = [shifters, circComps, colFacts, colExpansions, uniqueness, perodicities, consistencies, powers, deBRs]
   return(data)
+
+def test_deBR_powers(A,W,apN,wantData,wantSuccessful, allPrint = False):
+  data = [];
+  shifters = []; circComps = []; powers = []; deBRs = [];
+  allSs = deBRGen.gen_allShifter(A,W)
+  for shifter in allSs:
+    deBR =  deBRGen.gen_ring(shifter[0],apN,A,W)
+    factors,isAperiodic,expanded = deBRValidation.check_aperiodic(deBR,A,W)
+    isConsistent = deBRValidation.check_consistency(deBR,shifter[0],A,W)
+    pow = deBRValidation.get_cyclen(shifter[0],A,apN,W)
+    isUnique = deBRValidation.check_unique(deBR,A,W,apN)
+    if allPrint:
+      print(f"Shifter used (circs composition): \n {shifter[0]} {shifter[1]}")
+      print(f"Col factors: \n {factors}")
+      print(f"Col base expansions: \n {expanded}")
+      print(f"Unique?, Aperiodic?, Consistent? and power cycle: \n {isUnique}, {isAperiodic}, {isConsistent}, {pow}")
+      print(f"Attempted deBR: \n {deBR} \n")
+
+    if wantSuccessful:
+      if isUnique and isAperiodic:
+        shifters.append(shifter[0]); circComps.append(shifter[1]);colFacts.append(factors); colExpansions.append(expanded) # components
+        uniqueness.append(isUnique); perodicities.append(isAperiodic); consistencies.append(isConsistent); powers.append(pow); deBRs.append(deBRs) # metrics
+    elif wantData:
+      shifters.append(shifter[0]); circComps.append(shifter[1]);colFacts.append(factors); colExpansions.append(expanded) # components
+      uniqueness.append(isUnique); perodicities.append(isAperiodic); consistencies.append(isConsistent); powers.append(pow); deBRs.append(deBRs) # metrics
+      # data stored as [ shifter, circs, col factors, col expansions, uniquness, perodicity, consistency, power, deBR]
+  data = [shifters, circComps, colFacts, colExpansions, uniqueness, perodicities, consistencies, powers, deBRs]
+  return(data)
+
 
 
 def print_data(data):
@@ -92,5 +121,3 @@ def graph_deBRs(A,W,apN,allData,succData):
   fig.set_size_inches(20, 8)
   plt.savefig(title)
   return()
-
-

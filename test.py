@@ -3,7 +3,7 @@ import deBRValidation
 import deBRVisualize
 
 # SIMULTAION SETTINGS
-deBRValidation.VERBOSE = deBRGen.VERBOSE = True
+deBRValidation.VERBOSE = deBRGen.VERBOSE = True # Need to define VERBOSE for deBRGen and deBRValidation to work
 ALPHABET = 2
 WINDOWDIM = (2,2) #Tuple of (length,width)
 
