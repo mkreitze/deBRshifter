@@ -4,6 +4,83 @@ import numpy as np
 import deBRGen
 import deBRValidation
 
+# Due to other analysis, we just generate the powers of the shifters.
+def test_deBR_powers(A,W, wantData = True, wantSuccessful = False, graphData = False, histogram = False):
+  data = [];
+  shifters = []; circComps = []; powers = []; dets = []; deBRs = [];
+  apN = deBRGen.gen_apNum(A,W) # gets apN through mobius function
+
+  # file shenannigans 
+  output = open(f"{wantSuccessful}_powers_{A}_{W[0]}_{W[1]}.txt", "w")
+  output.write(f"Shifters for |A| = {A}, \n Window Size = {W} \n and {apN} aperiodic windows\n")
+
+  allSs = deBRGen.gen_allShifter(A,W) # gets all shifters from all possible circs combos
+
+  for shifter in allSs: # walks through shifters, checking pow. Shifter[0] is the shifter, shifter[1] is the composition of circs
+    deBR =  deBRGen.gen_ring(shifter[0],apN,A,W)
+    pow = deBRValidation.get_cyclen(shifter[0],A,apN,W) # Note: Power value of -1 means we hit the 0 matrix, value of -2 means we never settle on I
+    det = np.linalg.det(shifter[0]) # det of deBR
+    det = det % A # mod A
+    det = int(det) # convert to int
+    if wantSuccessful:
+      if pow == apN:
+        shifters.append(shifter[0]); circComps.append(shifter[1]); powers.append(pow); dets.append(det); deBRs.append(deBR) # metrics
+        output.write(f"Shifter: {shifter[0]} \n Composition: {shifter[1]}\n Power: {pow}\n Determinant: {det}\n  deBR: {deBR}\n")
+    elif wantData:
+        shifters.append(shifter[0]); circComps.append(shifter[1]); powers.append(pow); dets.append(det); deBRs.append(deBR) # metrics
+        output.write(f"Shifter: {shifter[0]} \n Composition: {shifter[1]}\n Power: {pow}\n Determinant: {det}\n  deBR: {deBR}\n")
+      # data stored as [ shifter, circs, power, deBR]
+  data = [shifters, circComps, powers, dets, deBRs]
+  if graphData:
+    graph_powers(A,W,apN,data)
+  if histogram:
+    gen_histogram(A,W,apN,data)
+  return(data)
+
+
+
+def graph_powers(A,W,apN,allData):
+  # data stored as [ shifter, circs, power, deBR]
+  # very hard to show deBR. 
+  fig, ax = plt.subplots(1)
+  title = f'Shifters for A = {A}, \n Window Size = {W} \n and {apN} aperiodic windows'
+  fig.suptitle(title)
+  xs = np.arange(len(allData[2]),dtype = int)
+  ax.title.set_text('Powers')
+  ax.set_yticks(np.arange(-2,apN+1,1))
+  ax.scatter(xs, allData[2],  color = 'green')   # plots powers
+  ax.scatter(xs, allData[3],  color = 'blue')   # plots dets
+  # plots circulants of each shifter
+  for xe, ye in zip(xs, allData[1]):
+    xes = []
+    for i in range(len(ye)):
+      xes.append(i*(1/apN)+xe) # done to show multiplicity
+    ax.scatter(xes, ye, color = 'red')
+  ax.set_xticks(xs)
+  fig.set_size_inches(20, 8)
+  plt.savefig(title)
+  return()
+
+def gen_histogram(A,W,apN,allData):
+  # data stored as [ shifter, circs, power, deBR]
+  # very hard to show deBR. 
+  fig, ax = plt.subplots(2)
+  title = f'Histograms for A = {A}, W = {W}, apN = {apN}'
+  fig.suptitle(title)
+  bins = np.arange(-2,apN+1,1)
+  ax[0].title.set_text('Powers')
+  ax[0].hist(allData[2], bins)  
+  ax[1].title.set_text('Determinants')
+  ax[1].hist(allData[3], bins)  
+  fig.set_size_inches(20, 8)
+  plt.savefig(title)
+  return()
+
+
+# Runs through all deBRs for a specific Alphabet and Window size, and checks if they are unique, aperiodic and consistent.
+# allPrint prints all data to terminal output
+# wantSuccessful determines if we only want to see successful deBRs, or all attempted deBRs
+# wantData determines if we want to store all the data to a list 
 def test_deBRs(A,W,apN,wantData,wantSuccessful, allPrint = False):
   data = [];
   shifters = []; circComps = []; colFacts = []; colExpansions = []; uniqueness = []; perodicities = []; consistencies = []; powers = []; deBRs = [];
@@ -24,42 +101,13 @@ def test_deBRs(A,W,apN,wantData,wantSuccessful, allPrint = False):
     if wantSuccessful:
       if isUnique and isAperiodic:
         shifters.append(shifter[0]); circComps.append(shifter[1]);colFacts.append(factors); colExpansions.append(expanded) # components
-        uniqueness.append(isUnique); perodicities.append(isAperiodic); consistencies.append(isConsistent); powers.append(pow); deBRs.append(deBRs) # metrics
+        uniqueness.append(isUnique); perodicities.append(isAperiodic); consistencies.append(isConsistent); powers.append(pow); deBRs.append(deBR) # metrics
     elif wantData:
       shifters.append(shifter[0]); circComps.append(shifter[1]);colFacts.append(factors); colExpansions.append(expanded) # components
-      uniqueness.append(isUnique); perodicities.append(isAperiodic); consistencies.append(isConsistent); powers.append(pow); deBRs.append(deBRs) # metrics
+      uniqueness.append(isUnique); perodicities.append(isAperiodic); consistencies.append(isConsistent); powers.append(pow); deBRs.append(deBR) # metrics
       # data stored as [ shifter, circs, col factors, col expansions, uniquness, perodicity, consistency, power, deBR]
   data = [shifters, circComps, colFacts, colExpansions, uniqueness, perodicities, consistencies, powers, deBRs]
   return(data)
-
-def test_deBR_powers(A,W,apN,wantData,wantSuccessful, allPrint = False):
-  data = [];
-  shifters = []; circComps = []; powers = []; deBRs = [];
-  allSs = deBRGen.gen_allShifter(A,W)
-  for shifter in allSs:
-    deBR =  deBRGen.gen_ring(shifter[0],apN,A,W)
-    factors,isAperiodic,expanded = deBRValidation.check_aperiodic(deBR,A,W)
-    isConsistent = deBRValidation.check_consistency(deBR,shifter[0],A,W)
-    pow = deBRValidation.get_cyclen(shifter[0],A,apN,W)
-    isUnique = deBRValidation.check_unique(deBR,A,W,apN)
-    if allPrint:
-      print(f"Shifter used (circs composition): \n {shifter[0]} {shifter[1]}")
-      print(f"Col factors: \n {factors}")
-      print(f"Col base expansions: \n {expanded}")
-      print(f"Unique?, Aperiodic?, Consistent? and power cycle: \n {isUnique}, {isAperiodic}, {isConsistent}, {pow}")
-      print(f"Attempted deBR: \n {deBR} \n")
-
-    if wantSuccessful:
-      if isUnique and isAperiodic:
-        shifters.append(shifter[0]); circComps.append(shifter[1]);colFacts.append(factors); colExpansions.append(expanded) # components
-        uniqueness.append(isUnique); perodicities.append(isAperiodic); consistencies.append(isConsistent); powers.append(pow); deBRs.append(deBRs) # metrics
-    elif wantData:
-      shifters.append(shifter[0]); circComps.append(shifter[1]);colFacts.append(factors); colExpansions.append(expanded) # components
-      uniqueness.append(isUnique); perodicities.append(isAperiodic); consistencies.append(isConsistent); powers.append(pow); deBRs.append(deBRs) # metrics
-      # data stored as [ shifter, circs, col factors, col expansions, uniquness, perodicity, consistency, power, deBR]
-  data = [shifters, circComps, colFacts, colExpansions, uniqueness, perodicities, consistencies, powers, deBRs]
-  return(data)
-
 
 
 def print_data(data):
@@ -74,6 +122,7 @@ def print_data(data):
   print("Powers:");print(data[7])
   print("GenRings:");print("Very ugly wont output")# print(data[7])
   return(0)
+
 
 def graph_deBRs(A,W,apN,allData,succData):
   # data stored as [ shifter, circs, col factors, col expansions, uniquness, perodicity, consistency, power, deBR]
