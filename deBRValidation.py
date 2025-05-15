@@ -7,7 +7,12 @@ import itertools as it
 import sympy as symp # used to determine factors of an integer
 import matplotlib.pyplot as plt
 
-
+try:
+  VERBOSE
+except NameError:
+  VERBOSE = False
+else:
+  print("Verbose defined elsewhere")
 
 # INPUT: deBR (numpy array), shifter (numpy array), A (int), W (window length,width)
 # OUTPUT: isConsistent (boolean)
@@ -97,20 +102,23 @@ def check_aperiodic(deBR,A,W):
 def get_cyclen(shifter,A,apN,W):
     I = np.eye(shifter.shape[0])
     zero = np.zeros(shifter.shape)
-    temp = np.copy(shifter) # Matt is being paranoid
-    temp2 = np.copy(shifter) # Matt was correct to be paranoid
+    temp = shifter.copy() # Matt is being paranoid
+    temp2 = temp.copy() # Matt was correct to be paranoid
+    temp3 = zero.copy() # Seriously, the way numpy just randomly decides to hold data together is terrifying. Genuinely should just code my own shit in C at this point
     i=1 # identity matrix not possible, but start from 1 for cleaner doc output
-    while (not np.array_equal(temp2,I)):
-      temp2 = (temp2@temp)%A
+    while (not np.array_equal(temp3,I)):
+      temp3 = (temp@temp2)%A
       i+=1
       if VERBOSE:
         print(f"Power {i}: \n {temp2}")
-      if np.array_equal(temp2,zero): # checks for 0 matrix
+
+      if np.array_equal(temp3,zero): # checks for 0 matrix
         i = -1
         break
-      if i > A**(apN): # checks for repeated matrix, i must be = or smaller than total number of windows
+      if i > apN: # checks for repeated matrix, i must be = or smaller than total number of windows
         i = -2
         break
+      temp = np.copy(temp3)
     if VERBOSE:
       print(f"Power for matrix: {i}")
     return(i)

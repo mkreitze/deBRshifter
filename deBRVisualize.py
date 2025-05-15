@@ -4,10 +4,19 @@ import numpy as np
 import deBRGen
 import deBRValidation
 
+
+try:
+  VERBOSE
+except NameError:
+  VERBOSE = False
+else:
+  print("Verbose defined elsewhere")
+
+
 # Due to other analysis, we just generate the powers of the shifters.
+# Stores data into file OnlySuccessful_A_L_W.txt
 def test_deBR_powers(A,W, wantData = True, wantSuccessful = False, graphData = False, histogram = False):
-  data = [];
-  shifters = []; circComps = []; powers = []; dets = []; deBRs = [];
+  data = []; powers = []; dets = []
   apN = deBRGen.gen_apNum(A,W) # gets apN through mobius function
 
   # file shenannigans 
@@ -22,57 +31,55 @@ def test_deBR_powers(A,W, wantData = True, wantSuccessful = False, graphData = F
     det = np.linalg.det(shifter[0]) # det of deBR
     det = det % A # mod A
     det = int(det) # convert to int
-    if wantSuccessful:
+    
+    if wantSuccessful: # could clean up and remove a repetative codeblock here. Do in future?
       if pow == apN:
-        shifters.append(shifter[0]); circComps.append(shifter[1]); powers.append(pow); dets.append(det); deBRs.append(deBR) # metrics
+        data.append([shifter[1], pow, det]) # metrics
+        powers.append(pow);dets.append(det)
         output.write(f"Shifter: {shifter[0]} \n Composition: {shifter[1]}\n Power: {pow}\n Determinant: {det}\n  deBR: {deBR}\n")
     elif wantData:
-        shifters.append(shifter[0]); circComps.append(shifter[1]); powers.append(pow); dets.append(det); deBRs.append(deBR) # metrics
+        data.append([shifter[1], pow, det]) # metrics
+        powers.append(pow);dets.append(det)
         output.write(f"Shifter: {shifter[0]} \n Composition: {shifter[1]}\n Power: {pow}\n Determinant: {det}\n  deBR: {deBR}\n")
-      # data stored as [ shifter, circs, power, deBR]
-  data = [shifters, circComps, powers, dets, deBRs]
+  # each shifter's data is stored as: circs, pow, det. Easier for table
+  histData = [powers,dets]
   if graphData:
     graph_powers(A,W,apN,data)
   if histogram:
-    gen_histogram(A,W,apN,data)
+    gen_histogram(A,W,apN,histData)
   return(data)
 
 
 
 def graph_powers(A,W,apN,allData):
-  # data stored as [ shifter, circs, power, deBR]
+  # data stored as [ circs, power, det]
   # very hard to show deBR. 
-  fig, ax = plt.subplots(1)
-  title = f'Shifters for A = {A}, \n Window Size = {W} \n and {apN} aperiodic windows'
-  fig.suptitle(title)
-  xs = np.arange(len(allData[2]),dtype = int)
-  ax.title.set_text('Powers')
-  ax.set_yticks(np.arange(-2,apN+1,1))
-  ax.scatter(xs, allData[2],  color = 'green')   # plots powers
-  ax.scatter(xs, allData[3],  color = 'blue')   # plots dets
-  # plots circulants of each shifter
-  for xe, ye in zip(xs, allData[1]):
-    xes = []
-    for i in range(len(ye)):
-      xes.append(i*(1/apN)+xe) # done to show multiplicity
-    ax.scatter(xes, ye, color = 'red')
-  ax.set_xticks(xs)
-  fig.set_size_inches(20, 8)
+  fig, ax = plt.subplots(); ax.axis("off")
+  title = f'Power Analysis for A = {A}, \n Window Size = {W} \n and {apN} aperiodic windows'; fig.suptitle(title) # gen title
+  cols = ["Circulants", "Power", "Determinant" ]
+  table = ax.table(cellText = allData, colLabels = cols,cellLoc = "center", loc = "center")
+  table.set_fontsize
+  for i,data in enumerate(allData):
+    if data[1] == apN:
+      cell = table[(i+1),1] # since we are highlighting powers
+      cell.set_facecolor('#FFA500')
+  fig.set_size_inches(6, apN)
+  table.scale(1,0.2)
   plt.savefig(title)
   return()
 
 def gen_histogram(A,W,apN,allData):
-  # data stored as [ shifter, circs, power, deBR]
+  # data stored as [ [powers] , [dets]]
   # very hard to show deBR. 
   fig, ax = plt.subplots(2)
   title = f'Histograms for A = {A}, W = {W}, apN = {apN}'
   fig.suptitle(title)
   bins = np.arange(-2,apN+1,1)
   ax[0].title.set_text('Powers')
-  ax[0].hist(allData[2], bins)  
+  ax[0].hist(allData[0], bins)  
   ax[1].title.set_text('Determinants')
-  ax[1].hist(allData[3], bins)  
-  fig.set_size_inches(20, 8)
+  ax[1].hist(allData[1], bins)  
+  fig.set_size_inches(apN/2, 6)
   plt.savefig(title)
   return()
 

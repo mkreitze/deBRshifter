@@ -6,6 +6,13 @@ import itertools as it
 import sympy as symp # used to determine factors of an integer
 import matplotlib.pyplot as plt
 
+try:
+  VERBOSE
+except NameError:
+  VERBOSE = False
+else:
+  print("Verbose defined elsewhere")
+
 
 
 # Input: A (alphabet), W (generic window dimensions)

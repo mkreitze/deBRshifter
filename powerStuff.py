@@ -10,8 +10,8 @@ deBRVisualize.ALLPRINT = False
 #
 # SIMULATION PARAMETERS
 
-ALPHABET = 2
-WINDOWDIM = (2,3) #Tuple of (length,width)
+ALPHABET = 3
+WINDOWDIM = (2,2) #Tuple of (length,width)
 APNUM = deBRGen.gen_apNum(ALPHABET,WINDOWDIM) # Number of aperiodic windows
 ONLYSUCCESSFUL = False # True if we only want to pow = apN shifters
 ALLDATA = True # True if we want to see all shifters, not just successful ones
