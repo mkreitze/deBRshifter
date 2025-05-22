@@ -116,7 +116,7 @@ def get_cyclen(shifter,A,apN,W):
       if i > apN+1: # if this pops, the matricies are cycling themselves.
         i = -2
         break
-
+      
       temp = np.copy(temp)
     if VERBOSE:
       print(f"Power for matrix: {i}")
