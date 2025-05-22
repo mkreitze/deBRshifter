@@ -113,9 +113,10 @@ def get_cyclen(shifter,A,apN,W):
       if np.array_equal(temp,zero): # checks for 0 matrix
         i = -1
         break
-      if i > apN: # checks for repeated matrix, i must be = or smaller than total number of windows
+      if i > apN+1: # if this pops, the matricies are cycling themselves.
         i = -2
         break
+
       temp = np.copy(temp)
     if VERBOSE:
       print(f"Power for matrix: {i}")

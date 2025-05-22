@@ -37,6 +37,12 @@ def test_deBR_powers(A,W, wantData = True, wantSuccessful = False, graphData = F
         data.append([shifter[1], pow, det]) # metrics
         powers.append(pow);dets.append(det)
         output.write(f"Shifter: {shifter[0]} \n Composition: {shifter[1]}\n Power: {pow}\n Determinant: {det}\n  deBR: {deBR}\n")
+      if (apN/pow)%1 == 0 and pow > 0:
+        output.write(f"Windows hit: \n")
+        windowsHit = deBRGen.gen_cycle(shifter[0],A,W,apN,pow)
+        for window in windowsHit:
+          output.write(f"{window} ")
+        output.write("\n")
     elif wantData:
         data.append([shifter[1], pow, det]) # metrics
         powers.append(pow);dets.append(det)
@@ -60,7 +66,7 @@ def graph_powers(A,W,apN,allData):
   table = ax.table(cellText = allData, colLabels = cols,cellLoc = "center", loc = "center")
   table.set_fontsize
   for i,data in enumerate(allData):
-    if (apN/data[1])%1 == 0 and data[1] > 0:
+    if (apN/data[1])%1 == 0 and data[1] > 0: 
       cell = table[(i+1),1] # highlights factors
       cell.set_facecolor("#00FF0D")
     if data[1] == apN:

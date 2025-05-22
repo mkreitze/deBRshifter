@@ -141,3 +141,13 @@ def gen_ring(shifter,apN,A,W):
   return(deBR)
 
 
+def gen_cycle(shifter,A,W,apN,l):
+  windowsHit = []
+  initWin = gen_initWindow(W)
+  initWin = initWin.reshape((-1, 1), order="F") # vec command
+  expo = np.arange(W[0]*W[1])
+  for i in range(l+1):
+    initWin = (shifter@initWin)%A
+    temp = expo@initWin
+    windowsHit.append(temp)
+  return(windowsHit)
