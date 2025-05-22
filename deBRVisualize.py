@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-
+import sympy as symp # used to determine factors of an integer
 import deBRGen
 import deBRValidation
 
@@ -60,11 +60,14 @@ def graph_powers(A,W,apN,allData):
   table = ax.table(cellText = allData, colLabels = cols,cellLoc = "center", loc = "center")
   table.set_fontsize
   for i,data in enumerate(allData):
+    if (apN/data[1])%1 == 0 and data[1] > 0:
+      cell = table[(i+1),1] # highlights factors
+      cell.set_facecolor("#00FF0D")
     if data[1] == apN:
-      cell = table[(i+1),1] # since we are highlighting powers
+      cell = table[(i+1),1] # highlights perfect lengths
       cell.set_facecolor('#FFA500')
   fig.set_size_inches(6, apN)
-  table.scale(1,0.2)
+  table.scale(1,6/apN)
   plt.savefig(title)
   return()
 
