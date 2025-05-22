@@ -33,7 +33,7 @@ def test_deBR_powers(A,W, wantData = True, wantSuccessful = False, graphData = F
     det = int(det) # convert to int
     
     if wantSuccessful: # could clean up and remove a repetative codeblock here. Do in future?
-      if pow == apN:
+      if pow == apN or ((apN/pow)%1 == 0 and pow > 0):
         data.append([shifter[1], pow, det]) # metrics
         powers.append(pow);dets.append(det)
         output.write(f"Shifter: {shifter[0]} \n Composition: {shifter[1]}\n Power: {pow}\n Determinant: {det}\n  deBR: {deBR}\n")

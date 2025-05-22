@@ -147,7 +147,8 @@ def gen_cycle(shifter,A,W,apN,l):
   initWin = initWin.reshape((-1, 1), order="F") # vec command
   expo = np.arange(W[0]*W[1])
   for i in range(l+1):
-    initWin = (shifter@initWin)%A
-    temp = expo@initWin
-    windowsHit.append(temp)
+    temp= (shifter@initWin)%A
+    temp2 = expo@initWin
+    initWin = np.copy(temp)
+    windowsHit.append(temp2)
   return(windowsHit)
