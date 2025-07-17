@@ -53,9 +53,9 @@ def imshow_via_mask(array,max,A,W): # A and W are just for title
 
 #there has to be some function, or something cool going on here. I am COMPLETELY unsure of what it is. 
 
-As = [2,3,4]           
-Ls = [2,3,4,5,6]
-Ws = [2,3,4,5,6]
+As = [2,3]           
+Ls = [2,3,4]
+Ws = [2,3,4]
 fileName = f"Periodic Windows As{As[0]},{As[-1]} Ls{Ls[0]},{Ls[-1]} Ws{Ws[0]},{Ws[-1]}"
 
 # combines the factors of each periodic window counting one each (as repeated prime decomp messing what im looking for here) 
@@ -91,7 +91,7 @@ for idx,A in enumerate(As):
 
             primePWs = pWins[np.vectorize(symp.isprime)(pWins)];print(primePWs) # finds the primes in the list (secondary thing tbh)
 
-            facts = np.vectorize(symp.factorint)(pWins);print(facts) # determines prime factorization of every pWin
+            facts = np.vectorize(symp.factorint)(pWins); # print(facts) # determines prime factorization of every pWin. VERY UGLY TO PRINT
 
             combinedFacts = combineDicts(facts);print(combinedFacts);print(len(pWins)) # checks occurance of each pWin's factors flattening to 1 contribution max per element
 
