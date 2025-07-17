@@ -53,12 +53,29 @@ def imshow_via_mask(array,max,A,W): # A and W are just for title
 
 #there has to be some function, or something cool going on here. I am COMPLETELY unsure of what it is. 
 
-As = [2,3]           
-Ls = [2,3,4]
-Ws = [2,3,4]
+As = [2,3,4]           
+Ls = [2,3,4,5,6]
+Ws = [2,3,4,5,6]
 fileName = f"Periodic Windows As{As[0]},{As[-1]} Ls{Ls[0]},{Ls[-1]} Ws{Ws[0]},{Ws[-1]}"
 
+# combines the factors of each periodic window counting one each (as repeated prime decomp messing what im looking for here) 
+def combineDicts(facts):
+    combinedFacts = coll.Counter() # Counter; supposedly a fast way to keep these all counted
+    for f in facts: 
+        for prime in f:
+            combinedFacts[prime] += 1 # "flattening"
+    combinedFacts = dict(sorted(combinedFacts.items()))
+    return(combinedFacts)
 
+# Takes a base 10  number and converts it to a 
+def toBase(original,newBase,numOfDigits):
+    digits = []
+    while original > 0: 
+        digits.append(original%newBase)
+        original //= newBase
+    while len(digits) < numOfDigits:
+        digits.append(0)
+    return list(reversed(digits))
 
 with open(f"{fileName}.txt","w") as file:
     file.write(f"Perodic Windows for: \n A{As} \n L{Ls} \n W{Ws} \n")
@@ -70,17 +87,27 @@ for idx,A in enumerate(As):
             print(f"Non linear progress bar: {idx/len(As)*100}% As {idx2/len(Ws)*100}% Ws {idx3/len(Ls)*100}% Ls ")
             pWins = gen_p_windows(A,(L,W))
             maxNum = A**(L*W)-1
-            imshow_via_mask(pWins,maxNum,A,(L,W));print(pWins)
-            primePWs = pWins[np.vectorize(symp.isprime)(pWins)];print(primePWs)
-            facts = np.vectorize(symp.factorint)(pWins);print(facts) # 1 as the first entry is 0 always
-            combinedFacts = coll.Counter()
-            for f in facts:
-                combinedFacts.update(f)
-            combinedFacts = dict(sorted(combinedFacts.items()))
-            print(combinedFacts)
-            print(len(pWins))
+            imshow_via_mask(pWins,maxNum,A,(L,W));print(pWins) # generates our.. somewhat useful... images
+
+            primePWs = pWins[np.vectorize(symp.isprime)(pWins)];print(primePWs) # finds the primes in the list (secondary thing tbh)
+
+            facts = np.vectorize(symp.factorint)(pWins);print(facts) # determines prime factorization of every pWin
+
+            combinedFacts = combineDicts(facts);print(combinedFacts);print(len(pWins)) # checks occurance of each pWin's factors flattening to 1 contribution max per element
+
+            primeWithSpecialOccurance = [p for p, count in combinedFacts.items() if count == len(pWins)-1];print(primeWithSpecialOccurance) # checks if these primes occur at least once in each pWin rep
+
+            specialWindows = []
+            for specialPrime in primeWithSpecialOccurance:
+                specialWindows.append(np.array(toBase(specialPrime,A,L*W)).reshape(L,W))
+            looksNice= np.hstack(specialWindows);print(f"Special 'window factors' (W = {W}): \n {looksNice}") # Turns these back into windows. As they are "window factors?" almost?
+
             with open(f"{fileName}.txt","a") as file:
                 file.write(f"A {A} L {L} W {W} \n")
                 file.write(f"{pWins}\n")
                 file.write(f"{primePWs}\n")
                 file.write(f"{combinedFacts}\n Number of primes: {len(pWins)} \n ")
+                file.write(f"Every perodic window has the following factor (with 0 exception): {primeWithSpecialOccurance} \n")
+                file.write(f"\"Function\": {A} {L} {W} -> {primeWithSpecialOccurance} \n")
+                file.write(f"Special 'prime windows' (W= {W}): \n {looksNice} \n")
+
