@@ -2,6 +2,7 @@ import sympy as symp
 import itertools as it
 import numpy as np
 import matplotlib.pyplot as plt
+import collections as coll
 from matplotlib.colors import ListedColormap
 # INPUT: A; Alphabet, W; Window dimensions (standard work)
 # OUTPUT: All 
@@ -50,10 +51,12 @@ def imshow_via_mask(array,max,A,W): # A and W are just for title
 
 #SIMULATION PARAMS
 
-As = [2]           
+#there has to be some function, or something cool going on here. I am COMPLETELY unsure of what it is. 
+
+As = [2,3]           
 Ls = [2,3,4]
 Ws = [2,3,4]
-fileName = f"Periodic Windows As{As[0]}:{As[-1]} Ls{Ls[0]}:{Ls[-1]} Ws{Ws[0]}:{Ws[-1]}"
+fileName = f"Periodic Windows As{As[0]},{As[-1]} Ls{Ls[0]},{Ls[-1]} Ws{Ws[0]},{Ws[-1]}"
 
 
 
@@ -67,11 +70,17 @@ for idx,A in enumerate(As):
             print(f"Non linear progress bar: {idx/len(As)*100}% As {idx2/len(Ws)*100}% Ws {idx3/len(Ls)*100}% Ls ")
             pWins = gen_p_windows(A,(L,W))
             maxNum = A**(L*W)-1
-            imshow_via_mask(pWins,maxNum,A,(L,W))
-            print(pWins)
-            primePWs = pWins[np.vectorize(symp.isprime)(pWins)]
-            print(primePWs)
+            imshow_via_mask(pWins,maxNum,A,(L,W));print(pWins)
+            primePWs = pWins[np.vectorize(symp.isprime)(pWins)];print(primePWs)
+            facts = np.vectorize(symp.factorint)(pWins);print(facts) # 1 as the first entry is 0 always
+            combinedFacts = coll.Counter()
+            for f in facts:
+                combinedFacts.update(f)
+            combinedFacts = dict(sorted(combinedFacts.items()))
+            print(combinedFacts)
+            print(len(pWins))
             with open(f"{fileName}.txt","a") as file:
                 file.write(f"A {A} L {L} W {W} \n")
                 file.write(f"{pWins}\n")
                 file.write(f"{primePWs}\n")
+                file.write(f"{combinedFacts}\n Number of primes: {len(pWins)} \n ")
