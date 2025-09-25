@@ -12,7 +12,7 @@ try:
 except NameError:
   VERBOSE = False
 else:
-  print("Verbose defined elsewhere")
+  print("Verbose defined elsewhere") 
 
 # INPUT: deBR (numpy array), shifter (numpy array), A (int), W (window length,width)
 # OUTPUT: isConsistent (boolean)
