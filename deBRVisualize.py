@@ -15,12 +15,12 @@ else:
 
 # Due to other analysis, we just generate the powers of the shifters.
 # Stores data into file OnlySuccessful_A_L_W.txt
-def test_deBR_powers(A,W, wantData = True, wantSuccessful = False, graphData = False, histogram = False):
+def test_deBR_powers(A,W, wantData = True, wantSuccessful = False, graphData = False, histogram = False, wantCycles = False):
   data = []; powers = []; dets = []
   apN = deBRGen.gen_apNum(A,W) # gets apN through mobius function
 
   # file shenannigans 
-  output = open(f"{wantSuccessful}_powers_{A}_{W[0]}_{W[1]}.txt", "w")
+  output = open(f"Cycles){wantCycles}_onlyAPN){wantSuccessful}_powers_{A}_{W[0]}_{W[1]}.txt", "w")
   output.write(f"Shifters for |A| = {A}, \n Window Size = {W} \n and {apN} aperiodic windows\n")
 
   allSs = deBRGen.gen_allShifter(A,W) # gets all shifters from all possible circs combos
@@ -47,7 +47,12 @@ def test_deBR_powers(A,W, wantData = True, wantSuccessful = False, graphData = F
         data.append([shifter[1], pow, det]) # metrics
         powers.append(pow);dets.append(det)
         output.write(f"Shifter: {shifter[0]} \n Composition: {shifter[1]}\n Power: {pow}\n Determinant: {det}\n  deBR: {deBR}\n")
-  # each shifter's data is stored as: circs, pow, det. Easier for table
+    elif wantCycles:
+      if pow != -2 and pow != -1:
+        data.append([shifter[1], pow, det]) # metrics
+        powers.append(pow);dets.append(det)
+        output.write(f"Shifter: {shifter[0]} \n Composition: {shifter[1]}\n Power: {pow}\n Determinant: {det}\n  deBR: {deBR}\n")
+          # each shifter's data is stored as: circs, pow, det. Easier for table
   histData = [powers,dets]
   if graphData:
     graph_powers(A,W,apN,data)
@@ -97,7 +102,7 @@ def gen_histogram(A,W,apN,allData):
 # allPrint prints all data to terminal output
 # wantSuccessful determines if we only want to see successful deBRs, or all attempted deBRs
 # wantData determines if we want to store all the data to a list 
-def test_deBRs(A,W,apN,wantData,wantSuccessful, allPrint = False):
+def test_deBRs(A,W,apN,wantData,wantSuccessful, wantCycles, allPrint = False):
   data = [];
   shifters = []; circComps = []; colFacts = []; colExpansions = []; uniqueness = []; perodicities = []; consistencies = []; powers = []; deBRs = [];
   allSs = deBRGen.gen_allShifter(A,W)
@@ -113,8 +118,7 @@ def test_deBRs(A,W,apN,wantData,wantSuccessful, allPrint = False):
       print(f"Col base expansions: \n {expanded}")
       print(f"Unique?, Aperiodic?, Consistent? and power cycle: \n {isUnique}, {isAperiodic}, {isConsistent}, {pow}")
       print(f"Attempted deBR: \n {deBR} \n")
-
-    if wantSuccessful:
+    elif wantSuccessful:
       if isUnique and isAperiodic:
         shifters.append(shifter[0]); circComps.append(shifter[1]);colFacts.append(factors); colExpansions.append(expanded) # components
         uniqueness.append(isUnique); perodicities.append(isAperiodic); consistencies.append(isConsistent); powers.append(pow); deBRs.append(deBR) # metrics
@@ -122,6 +126,11 @@ def test_deBRs(A,W,apN,wantData,wantSuccessful, allPrint = False):
       shifters.append(shifter[0]); circComps.append(shifter[1]);colFacts.append(factors); colExpansions.append(expanded) # components
       uniqueness.append(isUnique); perodicities.append(isAperiodic); consistencies.append(isConsistent); powers.append(pow); deBRs.append(deBR) # metrics
       # data stored as [ shifter, circs, col factors, col expansions, uniquness, perodicity, consistency, power, deBR]
+    elif wantCycles:
+      if pow != -2 and pow != -1:
+        shifters.append(shifter[0]); circComps.append(shifter[1]);colFacts.append(factors); colExpansions.append(expanded) # components
+        uniqueness.append(isUnique); perodicities.append(isAperiodic); consistencies.append(isConsistent); powers.append(pow); deBRs.append(deBR) # metrics
+      
   data = [shifters, circComps, colFacts, colExpansions, uniqueness, perodicities, consistencies, powers, deBRs]
   return(data)
 
