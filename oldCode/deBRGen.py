@@ -1,13 +1,4 @@
 
-# IMPORTS
-import numpy as np
-from numpy.linalg import matrix_power
-import itertools as it
-import sympy as symp # used to determine factors of an integer
-import matplotlib.pyplot as plt
-
-
-
 
 # Input: A (alphabet), W (generic window dimensions)
 # Output: W0, initial aperodic window 

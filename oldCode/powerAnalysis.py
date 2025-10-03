@@ -1,7 +1,7 @@
-import deBRGen
+import deBRConstructor
 import deBRValidation
 import deBRGenData
-deBRValidation.VERBOSE = deBRGen.VERBOSE = False
+deBRValidation.VERBOSE = deBRConstructor.VERBOSE = False
 deBRGenData.ALLPRINT = False
 
 
@@ -12,7 +12,7 @@ deBRGenData.ALLPRINT = False
 
 ALPHABET = 2
 WINDOWDIM = (2,2) #Tuple of (length,width)
-APNUM = deBRGen.gen_apNum(ALPHABET,WINDOWDIM) # Number of aperiodic windows
+APNUM = deBRConstructor.gen_apNum(ALPHABET,WINDOWDIM) # Number of aperiodic windows
 ONLYSUCCESSFUL = False # True if we only want to pow = apN shifters
 ALLDATA = False # True if we want to see all shifters, not just successful ones
 WANTGRAPH = True # True if we want to graph the data

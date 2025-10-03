@@ -1,30 +1,30 @@
-import deBRGen
+import deBRConstructor
 import deBRValidation
 import deBRGenData
 
 # SIMULTAION SETTINGS
-deBRValidation.VERBOSE = deBRGen.VERBOSE = True # Need to define VERBOSE for deBRGen and deBRValidation to work
+deBRValidation.VERBOSE = deBRConstructor.VERBOSE = True # Need to define VERBOSE for deBRGen and deBRValidation to work
 ALPHABET = 2
 WINDOWDIM = (2,2) #Tuple of (length,width)
 
 # GENERATION OF SHIFTER AND DEBR
 # prints general window
-WINIT = deBRGen.gen_initWindow(WINDOWDIM)
+WINIT = deBRConstructor.gen_initWindow(WINDOWDIM)
 
 # Determines number of aperodic windows
-APNUM = deBRGen.gen_apNum(ALPHABET,WINDOWDIM)
+APNUM = deBRConstructor.gen_apNum(ALPHABET,WINDOWDIM)
 
 # Generates generic shifter
-A = deBRGen.gen_shifter(WINDOWDIM)
+A = deBRConstructor.gen_shifter(WINDOWDIM)
 
 # Generates all sub-circ matricies
-Cs = deBRGen.gen_subcircs(ALPHABET,WINDOWDIM)
+Cs = deBRConstructor.gen_subcircs(ALPHABET,WINDOWDIM)
 
 # Generates all shifters with inputted sub-circ matricies
-allSs = deBRGen.gen_allShifter(ALPHABET,WINDOWDIM)
+allSs = deBRConstructor.gen_allShifter(ALPHABET,WINDOWDIM)
 
 j=5 # 5/6 produce good deBR
-AdeBR = deBRGen.gen_ring(allSs[j][0],APNUM,ALPHABET,WINDOWDIM) # note 0 to grab numpy array
+AdeBR = deBRConstructor.gen_ring(allSs[j][0],APNUM,ALPHABET,WINDOWDIM) # note 0 to grab numpy array
 
 # VALIDATION OF DEBR
 
@@ -44,7 +44,7 @@ pow = deBRValidation.get_cyclen(allSs[j][0],ALPHABET,APNUM,WINDOWDIM)
 uniqueness = deBRValidation.check_unique(AdeBR,ALPHABET,WINDOWDIM,APNUM)
 
 # Visualizes data
-deBRValidation.VERBOSE = deBRGen.VERBOSE = False
+deBRValidation.VERBOSE = deBRConstructor.VERBOSE = False
 deBRGenData.ALLPRINT = True
 allData = deBRGenData.test_deBRs(ALPHABET,WINDOWDIM,APNUM,False,False)
 print(allData) #should be empty as we don't want anything stored

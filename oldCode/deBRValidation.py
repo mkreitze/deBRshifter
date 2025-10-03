@@ -1,7 +1,7 @@
 
 # IMPORTS
 import numpy as np
-import deBRGen
+import deBRConstructor
 from numpy.linalg import matrix_power
 import itertools as it
 import sympy as symp # used to determine factors of an integer
@@ -26,11 +26,11 @@ def check_consistency(deBR,shifter,A,W):
     print("Final window")
     print(finalWin)
     print("Expected initial window")
-    print(deBRGen.gen_initWindow(W))
+    print(deBRConstructor.gen_initWindow(W))
     print("Generated initial window through shifter")
     print(firstWin)
-    print(f"Thus consistency is {bool((firstWin == deBRGen.gen_initWindow(W)).all())}")
-  return(bool((firstWin == deBRGen.gen_initWindow(W)).all()))
+    print(f"Thus consistency is {bool((firstWin == deBRConstructor.gen_initWindow(W)).all())}")
+  return(bool((firstWin == deBRConstructor.gen_initWindow(W)).all()))
 
 # INPUT: deBR (numpy array), A (alphabet size), W (window (length,width))
 # OUTPUT: factDeBR (numpy array), winFacts (dictionary)
