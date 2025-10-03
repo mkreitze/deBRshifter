@@ -10,13 +10,13 @@ deBRVisualize.ALLPRINT = False
 #
 # SIMULATION PARAMETERS
 
-ALPHABET = 3
-WINDOWDIM = (2,2) #Tuple of (length,width)
+ALPHABET = 2
+WINDOWDIM = (3,3) #Tuple of (length,width)
 APNUM = deBRGen.gen_apNum(ALPHABET,WINDOWDIM) # Number of aperiodic windows
 ONLYSUCCESSFUL = False # True if we only want to pow = apN shifters
 ALLDATA = False # True if we want to see all shifters, not just successful ones
 WANTGRAPH = True # True if we want to graph the data
-WANTHISTOGRAM = False # True if we want to graph the histogram of the data
+WANTHISTOGRAM = True # True if we want to graph the histogram of the data
 WANTCYCLES = True
 #
 #
