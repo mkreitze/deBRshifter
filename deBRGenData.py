@@ -3,7 +3,7 @@ import numpy as np
 import sympy as symp # used to determine factors of an integer
 import deBRGen
 import deBRValidation
-
+import os
 
 try:
   VERBOSE
@@ -11,6 +11,12 @@ except NameError:
   VERBOSE = False
 else:
   print("Verbose defined elsewhere")
+
+
+# for file saving 
+folder_path = "plots"
+os.makedirs(folder_path, exist_ok=True)
+
 
 
 # Due to other analysis, we just generate the powers of the shifters.
@@ -59,8 +65,6 @@ def test_deBR_powers(A,W, wantData = True, wantSuccessful = False, graphData = F
   if histogram:
     gen_histogram(A,W,apN,histData)
   return(data)
-
-
 
 def graph_powers(A,W,apN,allData):
   # data stored as [ circs, power, det]

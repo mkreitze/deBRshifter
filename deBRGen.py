@@ -6,12 +6,6 @@ import itertools as it
 import sympy as symp # used to determine factors of an integer
 import matplotlib.pyplot as plt
 
-try:
-  VERBOSE
-except NameError:
-  VERBOSE = False
-else:
-  print("Verbose defined elsewhere")
 
 
 
@@ -28,7 +22,7 @@ def gen_initWindow(W,VERBOSE = False):
 
 # INPUT: A,W (Alphabet size, Window width)
 # OUTPUT: apNum (int)
-# Determines number of aperodic windows through application of the mobius function
+# Determines number of aperodic windows through application of the mobius function. Uses 'efficient' ''sieve-based'' method. Did not look into much.
 def gen_apNum(A,W):
   mobis = list(symp.sieve.mobiusrange(1,W[0]+1)) # we use sieve to efficiently compute factors
   apNum = 0
@@ -43,7 +37,7 @@ def gen_apNum(A,W):
 
 # Input: W (window length,width)
 # Output: S (numpy array)
-# Generates general shifter, not intialized by any circs
+# Generates general shifter, no subcircs within
 def gen_shifter(W):
   d = W[0]*W[1]
   S = np.eye(d)

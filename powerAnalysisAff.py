@@ -1,10 +1,3 @@
-import deBRGen
-import deBRValidation
-import deBRVisualize
-deBRValidation.VERBOSE = deBRGen.VERBOSE = False
-deBRVisualize.ALLPRINT = False
-
-
 #
 #
 #
@@ -29,4 +22,4 @@ WANTHISTOGRAM = True # True if we want to graph the histogram of the data
 # CODE TO RUN
 
 print(f"Checking powers of shifters with A = {ALPHABET}, W = {WINDOWDIM}, apN = {APNUM}")
-successful = deBRVisualize.test_deBR_powers(ALPHABET,WINDOWDIM,ALLDATA,ONLYSUCCESSFUL,WANTGRAPH,WANTHISTOGRAM)
+successful = deBRGenData.test_deBR_powers(ALPHABET,WINDOWDIM,ALLDATA,ONLYSUCCESSFUL,WANTGRAPH,WANTHISTOGRAM)

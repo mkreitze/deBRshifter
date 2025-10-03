@@ -1,6 +1,6 @@
 import deBRGen
 import deBRValidation
-import deBRVisualize
+import deBRGenData
 
 # SIMULTAION SETTINGS
 deBRValidation.VERBOSE = deBRGen.VERBOSE = True # Need to define VERBOSE for deBRGen and deBRValidation to work
@@ -45,8 +45,8 @@ uniqueness = deBRValidation.check_unique(AdeBR,ALPHABET,WINDOWDIM,APNUM)
 
 # Visualizes data
 deBRValidation.VERBOSE = deBRGen.VERBOSE = False
-deBRVisualize.ALLPRINT = True
-allData = deBRVisualize.test_deBRs(ALPHABET,WINDOWDIM,APNUM,False,False)
+deBRGenData.ALLPRINT = True
+allData = deBRGenData.test_deBRs(ALPHABET,WINDOWDIM,APNUM,False,False)
 print(allData) #should be empty as we don't want anything stored
 
 
