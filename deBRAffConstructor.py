@@ -22,6 +22,7 @@ def basic_shifter(W):
   d = W[0]*W[1]+1
   S = np.eye(d)
   S = np.roll(S,-W[0],axis = 0)
-  S[(d-W[0]):] = -1
+  S[(d-W[0]-1):(d-W[0]+1)] = -1
+  S[-1,-1] = 1;S[-1,1] = 0
   return(S)
 
