@@ -5,6 +5,8 @@ import itertools as it
 import sympy as symp # used to determine factors of an integer
 # ───────────────────────────────────────────────────────────
 
+# AFFINE CODE
+
 # This code constructs:
 # aperodic window count (apNum)
 # all sub-circulants 
@@ -15,9 +17,9 @@ import sympy as symp # used to determine factors of an integer
 
 # Input: W (window length,width)
 # Output: S (numpy array)
-# Generates general shifter, no subcircs within
+# Generates general affine shifter, no subcircs within
 def basic_shifter(W):
-  d = W[0]*W[1]
+  d = W[0]*W[1]+1
   S = np.eye(d)
   S = np.roll(S,-W[0],axis = 0)
   S[(d-W[0]):] = -1

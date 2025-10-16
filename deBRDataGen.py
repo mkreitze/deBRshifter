@@ -5,21 +5,18 @@ import itertools as it
 import sympy as symp # used to determine factors of an integer
 # ───────────────────────────────────────────────────────────
 
-# This code constructs:
-# aperodic window count (apNum)
-# all sub-circulants 
-# Singular shifter
-# All shifters
-# Generates all cycles
-# Tori (cycles)
+# This code:
+# Generates text files: 
+# All invertible circs for A,W
+# All circs with certain cycle lengths of A,W
+# Things to print: 
+# Circ fingerprint
+# Prints cycles, powers
+# Prints tori for each cycle
 
-# Input: W (window length,width)
-# Output: S (numpy array)
-# Generates general shifter, no subcircs within
-def basic_shifter(W):
-  d = W[0]*W[1]
-  S = np.eye(d)
-  S = np.roll(S,-W[0],axis = 0)
-  S[(d-W[0]):] = -1
-  return(S)
+
+# for file saving 
+folder_path = "plots"
+os.makedirs(folder_path, exist_ok=True)
+
 

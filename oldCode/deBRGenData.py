@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import sympy as symp # used to determine factors of an integer
-import deBRConstructor
+import deBRGen
 import deBRValidation
 import os
 
@@ -23,16 +23,16 @@ os.makedirs(folder_path, exist_ok=True)
 # Stores data into file OnlySuccessful_A_L_W.txt
 def test_deBR_powers(A,W, wantData = True, wantSuccessful = False, graphData = False, histogram = False, wantCycles = False):
   data = []; powers = []; dets = []
-  apN = deBRConstructor.gen_apNum(A,W) # gets apN through mobius function
+  apN = deBRGen.gen_apNum(A,W) # gets apN through mobius function
 
   # file shenannigans 
   output = open(f"Cycles){wantCycles}_onlyAPN){wantSuccessful}_powers_{A}_{W[0]}_{W[1]}.txt", "w")
   output.write(f"Shifters for |A| = {A}, \n Window Size = {W} \n and {apN} aperiodic windows\n")
 
-  allSs = deBRConstructor.gen_allShifter(A,W) # gets all shifters from all possible circs combos
+  allSs = deBRGen.gen_allShifter(A,W) # gets all shifters from all possible circs combos
 
   for shifter in allSs: # walks through shifters, checking pow. Shifter[0] is the shifter, shifter[1] is the composition of circs
-    deBR =  deBRConstructor.gen_ring(shifter[0],apN,A,W)
+    deBR =  deBRGen.gen_ring(shifter[0],apN,A,W)
     pow = deBRValidation.get_cyclen(shifter[0],A,apN,W) # Note: Power value of -1 means we hit the 0 matrix, value of -2 means we never settle on I
     det = np.linalg.det(shifter[0]) # det of deBR
     det = det % A # mod A
@@ -45,7 +45,7 @@ def test_deBR_powers(A,W, wantData = True, wantSuccessful = False, graphData = F
         output.write(f"Shifter: {shifter[0]} \n Composition: {shifter[1]}\n Power: {pow}\n Determinant: {det}\n  deBR: {deBR}\n")
       if (apN/pow)%1 == 0 and pow > 0:
         output.write(f"Windows hit: \n")
-        windowsHit = deBRConstructor.gen_cycle(shifter[0],A,W,apN,pow)
+        windowsHit = deBRGen.gen_cycle(shifter[0],A,W,apN,pow)
         for window in windowsHit:
           output.write(f"{window} ")
         output.write("\n")
@@ -109,9 +109,9 @@ def gen_histogram(A,W,apN,allData):
 def test_deBRs(A,W,apN,wantData,wantSuccessful, wantCycles, allPrint = False):
   data = [];
   shifters = []; circComps = []; colFacts = []; colExpansions = []; uniqueness = []; perodicities = []; consistencies = []; powers = []; deBRs = [];
-  allSs = deBRConstructor.gen_allShifter(A,W)
+  allSs = deBRGen.gen_allShifter(A,W)
   for shifter in allSs:
-    deBR =  deBRConstructor.gen_ring(shifter[0],apN,A,W)
+    deBR =  deBRGen.gen_ring(shifter[0],apN,A,W)
     factors,isAperiodic,expanded = deBRValidation.check_aperiodic(deBR,A,W)
     isConsistent = deBRValidation.check_consistency(deBR,shifter[0],A,W)
     pow = deBRValidation.get_cyclen(shifter[0],A,apN,W)

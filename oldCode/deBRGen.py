@@ -1,4 +1,8 @@
 
+import numpy as np
+import itertools as it
+import sympy as symp # used to determine factors of an integer
+
 
 # Input: A (alphabet), W (generic window dimensions)
 # Output: W0, initial aperodic window 
