@@ -77,6 +77,8 @@ def to_base(number, base):
         number //= base
     return list(reversed(digits))
 
+
+
 #INPUT:  A (Alphabet size) , W (window length,width)
 #OUTPUT allShifters (list in format: [shifter , circs in order as they made it up] )
 # Due to itertools method, circs are ordered arbitrarily. I.e "circ 5" does not really have meaning
