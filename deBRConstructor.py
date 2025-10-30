@@ -62,3 +62,46 @@ def shifter_gen_combo(W: type.Tuple[int, ...], combo: type.Tuple[int, ...],allCi
     circRow.append(allCircs[subCirc])
   shifter[-W[0]:] = np.concatenate(circRow,axis = 1) # np is
   return(shifter)
+
+# INFO (true implies invert)
+def is_invert(shifter: NDArray[int],A: int) -> bool:
+  if (np.linalg.det(shifter)%A) == 0:
+    return(False)
+  else:
+    return(True)
+
+# INFO (from internet)
+# Turns base 10 into base n
+# From https://mathspp.com/blog/base-conversion-in-python
+# might be incredibly slow.
+def to_base(number, base):
+    if not number:
+        return [0]
+    
+    digits = []
+    while number:
+        digits.append(number % base)
+        number //= base
+    return list(reversed(digits))
+
+# INFO 
+# stuff
+def gen_all_npWindows(A: int,W: type.Tuple[int, ...])-> type.List[NDArray[int]]:
+  windows = it.product(range(A),repeat = 4)
+  npWindows = []
+  for window in windows:
+    npWin = np.array(window).reshape(-1,1)
+    npWindows.append(npWin)
+  return(npWindows)
+
+
+# INFO (can be done with casting, rolling and - but probably not efficient)
+#
+def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A,W):
+  howManyRemoved = 0 # a LITTLE annoying
+  for window in allNpWindows:
+     newWindow = (shifter@window)%A
+     print(newWindow)
+
+    
+  return(0)

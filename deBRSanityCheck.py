@@ -13,7 +13,6 @@ print(f"Generic affine shifter (-1 denotes free): \n {deBRAffConstructor.basic_s
 
 print(f"Number of aperodic windows: \n {deBRConstructor.get_apNum(A,W)}")
 
-
 print(f"All sub-circs: (notice row in base 10 is index) ")
 allSubCircs = deBRConstructor.subcirc_gen_all(A,W)
 i = 0
@@ -25,21 +24,22 @@ print(f"Shifter with circ comp {tuple(1 for i in range(W[1]))}")
 onesShifter = deBRConstructor.shifter_gen_combo(W,tuple(1 for i in range(W[1])),allSubCircs)
 print(onesShifter)
 
-print(f"Is shifter invertible?")
-
-print(f"Power of shifter")
-
-print(f"Cycles of each")
-
-
-print(f"Affine Shifter with circ comp {tuple(1 for i in range(W[1]))}")
-onesShifter = deBRAffConstructor.shifter_gen_combo(W,tuple(1 for i in range(W[1])),allSubCircs)
-print(onesShifter)
+print(f"Is shifter invertible? {deBRConstructor.is_invert(onesShifter,A)}")
 
 print(f"All generated cycles for shifter")
-
-print(f"Is shifter invertible?")
-
+allWindows = deBRConstructor.gen_all_npWindows(A,W) # note windows are in base 10 order read bottom to top
+deBRConstructor.gen_cycles()
 print(f"Power of shifter")
 
-print(f"Cycles of each")
+
+
+# print(f"Affine Shifter with circ comp {tuple(1 for i in range(W[1]))}")
+# onesShifter = deBRAffConstructor.shifter_gen_combo(W,tuple(1 for i in range(W[1])),allSubCircs)
+# print(onesShifter)
+
+# print(f"Is shifter invertible? {deBRAffConstructor.is_invert(onesShifter,A)}")
+
+# print(f"All generated cycles for shifter")
+
+# print(f"Power of shifter")
+

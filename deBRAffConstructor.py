@@ -40,3 +40,10 @@ def shifter_gen_combo(W: type.Tuple[int, ...], combo: type.Tuple[int, ...],allCi
     circRow.append(allCircs[subCirc])
   shifter[-W[0]-1:-1,0:-1] = np.concatenate(circRow,axis = 1) # np is
   return(shifter)
+
+# INFO (true implies invert)
+def is_invert(shifter: NDArray[int],A: int) -> bool:
+  if (np.linalg.det(shifter)%A) == 0:
+    return(False)
+  else:
+    return(True)
