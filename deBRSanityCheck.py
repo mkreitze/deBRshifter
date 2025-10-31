@@ -28,10 +28,13 @@ print(f"Is shifter invertible? {deBRConstructor.is_invert(onesShifter,A)}")
 
 print(f"All generated cycles for shifter")
 allWindows = deBRConstructor.gen_all_npWindows(A,W) # note windows are in base 10 order read bottom to top
-deBRConstructor.gen_cycles(onesShifter,allWindows,A,W)
+onesCycles = deBRConstructor.gen_cycles(onesShifter,allWindows,A,W)
+for cycle in onesCycles:
+    # print(cycle[0])
+    print(cycle[1])
+    print("Next")
 
-
-print(f"Power of shifter")
+print(f"Power of shifter {deBRConstructor.get_power(onesShifter,A,W)}")
 
 
 

@@ -5,6 +5,7 @@ import itertools as it
 import sympy as symp # used to determine factors of an integer
 import typing as type # to make functions more clear
 from numpy.typing import NDArray 
+import time
 # ───────────────────────────────────────────────────────────
 
 # This code constructs:
@@ -87,24 +88,45 @@ def to_base(number, base):
 # INFO 
 # stuff
 def gen_all_npWindows(A: int,W: type.Tuple[int, ...])-> type.List[NDArray[int]]:
-  windows = it.product(range(A),repeat = 4)
+  windows = it.product(range(A),repeat = W[0]*W[1])
   npWindows = []
   for window in windows:
-    npWin = np.array(window).reshape(-1,1)
+    npWin = np.array(window,dtype=int).reshape(-1,1)
     npWindows.append(npWin)
   return(npWindows)
+
+# INFO
+# 
 def window_to_base10(window,A):
-  base10 = A ** np.arange(len(window))
-  return(base10)
+  base10 = (A ** np.arange(start = len(window)-1,stop = -1, step = -1))
+  return((base10@window).astype(int)[0])
   
 
 # INFO (can be done with casting, rolling and - but probably not efficient)
 #
 def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : int,W : type.Tuple[int,...]):
-  howManyRemoved = 0 # a LITTLE annoying
+  cycles = []
   for window in allNpWindows:
-     newWindow = (shifter@window)%A
-     print(window_to_base10(newWindow,A))
+    if window[0] != -1:
+      cycle = [];base10Cycle=[]
+      cycle.append(window);base10Cycle.append(window_to_base10(window,A))
+      tempWindow = np.copy(window)
+      tempWindow = (shifter@tempWindow)%A
+      while not np.array_equal(tempWindow,window):
+        allNpWindows[window_to_base10(tempWindow,A)][0] = -1
+        cycle.append(tempWindow);base10Cycle.append(window_to_base10(tempWindow,A))
+        tempWindow = (shifter@tempWindow)%A
+      cycles.append([np.array(cycle),np.array(base10Cycle)])
+  return(cycles)
 
-    
-  return(0)
+
+# INFO
+# 
+def get_power(shifter,A,W):
+  I = np.eye(W[0]*W[1])
+  tempShifter = np.copy(shifter)
+  pow = 1
+  while not np.array_equal(tempShifter, I) and pow < A**(W[0]*W[1]):
+    tempShifter = (shifter@tempShifter)%A
+    pow += 1
+  return(pow)
