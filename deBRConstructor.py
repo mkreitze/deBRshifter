@@ -93,15 +93,18 @@ def gen_all_npWindows(A: int,W: type.Tuple[int, ...])-> type.List[NDArray[int]]:
     npWin = np.array(window).reshape(-1,1)
     npWindows.append(npWin)
   return(npWindows)
-
+def window_to_base10(window,A):
+  base10 = A ** np.arange(len(window))
+  return(base10)
+  
 
 # INFO (can be done with casting, rolling and - but probably not efficient)
 #
-def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A,W):
+def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : int,W : type.Tuple[int,...]):
   howManyRemoved = 0 # a LITTLE annoying
   for window in allNpWindows:
      newWindow = (shifter@window)%A
-     print(newWindow)
+     print(window_to_base10(newWindow,A))
 
     
   return(0)
