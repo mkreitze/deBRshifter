@@ -3,7 +3,7 @@ import deBRConstructor
 import numpy as np
 
 
-W = (2,2) # defined as (length,width)
+W = (2,3) # defined as (length,width)
 A = 2 # alphabet size
 
 
@@ -32,6 +32,9 @@ onesCycles = deBRConstructor.gen_cycles(onesShifter,allWindows,A,W)
 for cycle in onesCycles:
     # print(cycle[0])
     print(cycle[1])
+    # if associated tori are desired, can be generated here
+    window = deBRConstructor.convert_to_base_a(cycle[1][0],A,W[0]*W[1]);tori = deBRConstructor.gen_tori(onesShifter,A,W,len(cycle[1]),window)
+    print(f"Torus associated to cycle: \n {tori}")
     print("Next")
 
 print(f"Power of shifter {deBRConstructor.get_power(onesShifter,A,W)}")

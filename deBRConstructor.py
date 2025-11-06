@@ -71,7 +71,7 @@ def is_invert(shifter: NDArray[int],A: int) -> bool:
   else:
     return(True)
 
-# INFO (from internet)
+# INFO (from internet) NOT USED
 # Turns base 10 into base n
 # From https://mathspp.com/blog/base-conversion-in-python
 # might be incredibly slow.
@@ -95,16 +95,41 @@ def gen_all_npWindows(A: int,W: type.Tuple[int, ...])-> type.List[NDArray[int]]:
     npWindows.append(npWin)
   return(npWindows)
 
-# INFO
+# INFO outputs vertical vector
+# from copilot. Please review
+def convert_to_base_a(num, base, n_digits):
+    if base < 2:
+        raise ValueError("Base must be at least 2.")
+    if num < 0:
+        raise ValueError("Number must be non-negative.")
+
+    digits = []
+    while num > 0:
+        digits.append(num % base)
+        num //= base
+
+    # Pad with leading zeros to ensure n_digits length
+    while len(digits) < n_digits:
+        digits.append(0)
+
+    # If the number requires more than n_digits, raise an error
+    if len(digits) > n_digits:
+        raise ValueError(f"Number too large to fit in {n_digits} digits for base {base}.")
+
+    # Reverse to get the correct order
+    return np.array(digits[::-1]).reshape((-1,1))
+
+
+# INFO 
 # 
-def window_to_base10(window,A):
+def window_to_base10(window: NDArray[int],A: int) -> int:
   base10 = (A ** np.arange(start = len(window)-1,stop = -1, step = -1))
   return((base10@window).astype(int)[0])
   
 
 # INFO (can be done with casting, rolling and - but probably not efficient)
 #
-def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : int,W : type.Tuple[int,...]):
+def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : int,W : type.Tuple[int,...]) -> type.List[type.List[NDArray[int]]]:
   cycles = []
   for window in allNpWindows:
     if window[0] != -1:
@@ -122,7 +147,7 @@ def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : 
 
 # INFO
 # 
-def get_power(shifter,A,W):
+def get_power(shifter: NDArray[int],A: int,W: type.Tuple[int,...]) -> int:
   I = np.eye(W[0]*W[1])
   tempShifter = np.copy(shifter)
   pow = 1
@@ -130,3 +155,20 @@ def get_power(shifter,A,W):
     tempShifter = (shifter@tempShifter)%A
     pow += 1
   return(pow)
+
+# INFO
+# 
+def gen_tori(shifter: NDArray[int],A: int,W: type.Tuple[int,...],cycleLen: int, initWin: NDArray[int]) -> NDArray[int]:
+  if cycleLen < W[1]:
+    return(-1)
+  deBR = np.zeros((W[0],cycleLen),dtype=int)
+  temp = np.copy(initWin);temp = np.reshape(temp,(W[0],W[1]))
+  print(deBR[:,:W[1]])
+  deBR[:,0:W[1]]= temp
+  for i in range(cycleLen-W[1]):
+    nextWin = deBR[0:W[0],i:i+W[1]]
+    nextWin = nextWin.reshape((-1, 1), order="F") # vec command
+    nextWin = (shifter@nextWin)%A 
+    deBR[:,i+W[1]:i+W[1]+1]= np.reshape(nextWin[-W[0]:],(W[0],1))
+  return(deBR)
+
