@@ -64,13 +64,6 @@ def shifter_gen_combo(W: type.Tuple[int, ...], combo: type.Tuple[int, ...],allCi
   shifter[-W[0]:] = np.concatenate(circRow,axis = 1) # np is
   return(shifter)
 
-# INFO (true implies invert)
-def is_invert(shifter: NDArray[int],A: int) -> bool:
-  if (np.linalg.det(shifter)%A) == 0:
-    return(False)
-  else:
-    return(True)
-
 # INFO (from internet) NOT USED
 # Turns base 10 into base n
 # From https://mathspp.com/blog/base-conversion-in-python
@@ -117,7 +110,7 @@ def convert_to_base_a(num, base, n_digits):
         raise ValueError(f"Number too large to fit in {n_digits} digits for base {base}.")
 
     # Reverse to get the correct order
-    return np.array(digits[::-1]).reshape((-1,1))
+    return np.array(digits[::-1]).reshape((-1,1), order="F")  # vertical vector
 
 
 # INFO 
@@ -141,34 +134,42 @@ def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : 
         allNpWindows[window_to_base10(tempWindow,A)][0] = -1
         cycle.append(tempWindow);base10Cycle.append(window_to_base10(tempWindow,A))
         tempWindow = (shifter@tempWindow)%A
-      cycles.append([np.array(cycle),np.array(base10Cycle)])
+      cycles.append([np.array(cycle).astype(int),np.array(base10Cycle)])
   return(cycles)
 
 
 # INFO
+# Note, we do not actually _generate_ the tori here, just use the cycle to fill it in
+# Ouput of -1 implies we have a cycle smaller than the window width. Leads to impossible tori
+def gen_tori(W: type.Tuple[int,...], cycle: NDArray[int]) -> NDArray[int]:
+  if len(cycle) < W[1]:
+    return(-1)
+  deBR = np.zeros((W[0],len(cycle)),dtype=int)
+  for i in range(len(cycle)):
+    temp = np.copy(cycle[i]) # to make sure it doesnt mess up the stored data
+    temp = temp.reshape((W[0],W[1]), order="F")
+    deBR[:,i] = temp[:,0] # copys each column of the torus
+  return(deBR)
+
+# INFO
 # 
-def get_power(shifter: NDArray[int],A: int,W: type.Tuple[int,...]) -> int:
+def get_power(shifter: NDArray[int],A: int,W: type.Tuple[int,...], VERBOSE = False) -> int:
   I = np.eye(W[0]*W[1])
   tempShifter = np.copy(shifter)
   pow = 1
   while not np.array_equal(tempShifter, I) and pow < A**(W[0]*W[1]):
+    if VERBOSE:
+      print(f"Shifter to the power of {pow}: \n {tempShifter}")
     tempShifter = (shifter@tempShifter)%A
     pow += 1
+  if VERBOSE:
+    print(f"Shifter to the power of {pow}: \n {tempShifter}")
   return(pow)
 
-# INFO
-# 
-def gen_tori(shifter: NDArray[int],A: int,W: type.Tuple[int,...],cycleLen: int, initWin: NDArray[int]) -> NDArray[int]:
-  if cycleLen < W[1]:
-    return(-1)
-  deBR = np.zeros((W[0],cycleLen),dtype=int)
-  temp = np.copy(initWin);temp = np.reshape(temp,(W[0],W[1]))
-  print(deBR[:,:W[1]])
-  deBR[:,0:W[1]]= temp
-  for i in range(cycleLen-W[1]):
-    nextWin = deBR[0:W[0],i:i+W[1]]
-    nextWin = nextWin.reshape((-1, 1), order="F") # vec command
-    nextWin = (shifter@nextWin)%A 
-    deBR[:,i+W[1]:i+W[1]+1]= np.reshape(nextWin[-W[0]:],(W[0],1))
-  return(deBR)
-
+# INFO (true implies invert)
+def is_invert(shifter: NDArray[int],A: int) -> bool:
+  if (np.linalg.det(shifter)%A) == 0:
+    return(False)
+  else:
+    return(True)
+  
