@@ -44,9 +44,9 @@ print(f"Power of shifter {deBRConstructor.get_power(onesShifter,A,W)}")
 # print(f"Affine Shifter with circ comp {tuple(1 for i in range(W[1]))}")
 # onesShifter = deBRAffConstructor.shifter_gen_combo(W,tuple(1 for i in range(W[1])),allSubCircs)
 # print(onesShifter)
+nstructor.is_invert(onesShifter,A)}")
 
-# print(f"Is shifter invertible? {deBRAffConstructor.is_invert(onesShifter,A)}")
-
+# print(f"Is shifter invertible? {deBRAffCo
 # print(f"All generated cycles for shifter")
 
 # print(f"Power of shifter")
