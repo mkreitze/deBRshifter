@@ -80,7 +80,7 @@ def to_base(number, base):
 
 # INFO 
 # stuff
-def gen_all_npWindows(A: int,W: type.Tuple[int, ...])-> type.List[NDArray[int]]:
+def gen_all_npWindows(A: int,W: type.Tuple[int, int])-> type.List[NDArray[int]]:
   windows = it.product(range(A),repeat = W[0]*W[1])
   npWindows = []
   for window in windows:
@@ -90,7 +90,7 @@ def gen_all_npWindows(A: int,W: type.Tuple[int, ...])-> type.List[NDArray[int]]:
 
 # INFO outputs vertical vector
 # from copilot. Please review
-def convert_to_base_a(num, base, n_digits):
+def convert_to_base_a(num: int, base: int, n_digits):
     if base < 2:
         raise ValueError("Base must be at least 2.")
     if num < 0:
@@ -114,11 +114,22 @@ def convert_to_base_a(num, base, n_digits):
 
 
 # INFO 
+# checks if the first window in a cycle is periodic or aperiodic 
+def is_cycle_periodic(window: NDArray[int],W: type.Tuple[int, int],A: int) -> bool:
+  divisors = symp.divisors(W[1])
+  temp = np.reshape(window,(W),order="F") # reshapes original window
+  for divisor in divisors[:-1]:
+    windowToRoll = np.roll(np.copy(temp),divisor,axis=0) # checks if same
+    temp2 = temp-windowToRoll
+    if np.all(temp2 == 0):
+      return(True) # checks all rotations
+  return(False)
+
+# INFO 
 # 
 def window_to_base10(window: NDArray[int],A: int) -> int:
   base10 = (A ** np.arange(start = len(window)-1,stop = -1, step = -1))
-  return((base10@window).astype(int)[0])
-  
+  return((base10@window).astype(int)[0])  
 
 # INFO (can be done with casting, rolling and - but probably not efficient)
 #
@@ -167,6 +178,7 @@ def get_power(shifter: NDArray[int],A: int,W: type.Tuple[int,...], VERBOSE = Fal
   return(pow)
 
 # INFO (true implies invert)
+# 
 def is_invert(shifter: NDArray[int],A: int) -> bool:
   if (np.linalg.det(shifter)%A) == 0:
     return(False)

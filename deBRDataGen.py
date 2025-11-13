@@ -7,13 +7,8 @@ import sympy as symp # used to determine factors of an integer
 
 # This code:
 # Generates text files: 
-# All invertible circs for A,W
-# All circs with certain cycle lengths of A,W
-# Things to print: 
-# Circ fingerprint
-# Prints cycles, powers
-# Prints tori for each cycle
-
+# All circs for arbitrary A,W for linear or affine shifters
+# Outputs data onto a file
 
 # for file saving 
 folder_path = "plots"

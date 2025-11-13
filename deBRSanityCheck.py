@@ -3,14 +3,18 @@ import deBRConstructor
 import numpy as np
 
 
-W = (2,2) # defined as (length,width)
-A = 2 # alphabet size
-PRINTLINEAR = False
-PRINTAFFINE = True
+# INFO
+# This code mainly just checks the 'all ones' version of a shifter for a specific alphabet size and windowsize. 
+# It checks the linear, and resulting affine case, for both scenarios. Helpful to make sure the code is working as intended
+
+W = (3,3) # defined as (length,width)
+A = 3 # alphabet size
+PRINTLINEAR = True
+PRINTAFFINE = False
 PRINTAFFINESANITY = False
+LONGOUTPUT = False # prints out the windows individually, bad if A,W are bigger than 2
 
 print(f"System for {A};{W}")
-
 
 if PRINTLINEAR:
 
@@ -39,11 +43,13 @@ if PRINTLINEAR:
     for cycle in onesCycles:
         # prints each cycle as base 10 numbers in list 
         print(f"For Cycle {cycle[1]}:")
-        # prints each cycle as windows (turn off if A,W large)
-        print(f"Windows: \n{cycle[0]}:")
+        if LONGOUTPUT:
+            # prints each cycle as windows (turn off if A,W large)
+            print(f"Windows: \n{cycle[0]}:")
         # if associated tori are desired, can be generated here
         tori = deBRConstructor.gen_tori(W,cycle[0])
         print(f"Torus associated to cycle: \n {tori}")
+        print(f"Note; cycle is {deBRConstructor.is_cycle_periodic(cycle[0][0],W,A)} periodic")
         print("-----")
 
     print(f"Power of shifter {deBRConstructor.get_power(onesShifter,A,W,True)}")
@@ -84,8 +90,9 @@ if PRINTAFFINE:
     for cycle in onesCycles:
         # prints each cycle as base 10 numbers in list 
         print(f"For Cycle {cycle[1]}:")
-        # prints each cycle as windows (turn off if A,W large)
-        print(f"Windows: \n{cycle[0]}:")
+        if LONGOUTPUT:
+            # prints each cycle as windows (turn off if A,W large)
+            print(f"Windows: \n{cycle[0]}:")
         # if associated tori are desired, can be generated here
         tori = deBRAffConstructor.gen_tori(W,cycle[0])
         print(f"Torus associated to cycle: \n {tori}")
@@ -130,8 +137,9 @@ if PRINTAFFINESANITY:
     for cycle in onesCycles:
         # prints each cycle as base 10 numbers in list 
         print(f"For Cycle {cycle[1]}:")
-        # prints each cycle as windows (turn off if A,W large)
-        print(f"Windows: \n{cycle[0]}:")
+        if LONGOUTPUT:
+            # prints each cycle as windows (turn off if A,W large)
+            print(f"Windows: \n{cycle[0]}:")
         # if associated tori are desired, can be generated here
         tori = deBRAffConstructor.gen_tori(W,cycle[0])
         print(f"Torus associated to cycle: \n {tori}")

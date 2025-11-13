@@ -123,6 +123,7 @@ def get_cyclen(shifter,A,apN,W):
     return(i)
 
 
+
 # INPUT: deBR (numpy), A (int), W (tuple (l,w)), apN (int)
 # OUTPUT: isUnique (bool)
 # Tiles deBR, then cuts it up. Uses numpy 'unique' command to condense one row of windows (issue detected?)
