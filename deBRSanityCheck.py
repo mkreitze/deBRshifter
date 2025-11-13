@@ -11,9 +11,11 @@ PRINTAFFINESANITY = False
 
 print(f"System for {A};{W}")
 
-print(f"\n FOR THE LINEAR CASE")
 
 if PRINTLINEAR:
+
+    print(f"\n FOR THE LINEAR CASE")
+
     print(f"\n Generic shifter (-1 denotes free): \n {deBRConstructor.basic_shifter(W)}")
 
     print(f"\n Number of aperodic windows: \n {deBRConstructor.get_apNum(A,W)}")
