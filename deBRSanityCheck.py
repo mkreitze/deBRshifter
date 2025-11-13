@@ -6,8 +6,8 @@ import numpy as np
 W = (2,2) # defined as (length,width)
 A = 2 # alphabet size
 PRINTLINEAR = False
-PRINTAFFINE = False
-PRINTAFFINESANITY = True
+PRINTAFFINE = True
+PRINTAFFINESANITY = False
 
 print(f"System for {A};{W}")
 
