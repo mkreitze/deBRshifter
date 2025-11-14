@@ -68,6 +68,9 @@ def gen_all_npWindows(A: int,W: type.Tuple[int, ...])-> type.List[NDArray[int]]:
 # Literally just changed window_to_base10(tempWindow,A) to deBRConstructor.window_to_base10(tempWindow[:-1],A)
 def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : int,W : type.Tuple[int,...]) -> type.List[type.List[NDArray[int]]]:
   cycles = []
+  rings = []
+  ringCondition = deBRConstructor.get_apNum(A,W)
+
   for window in allNpWindows:
     if window[0] != -1:
       cycle = [];base10Cycle=[]
@@ -78,8 +81,10 @@ def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : 
         allNpWindows[deBRConstructor.window_to_base10(tempWindow[:-1],A)][0] = -1
         cycle.append(tempWindow);base10Cycle.append(deBRConstructor.window_to_base10(tempWindow[:-1],A))
         tempWindow = (shifter@tempWindow)%A
+    if len(base10Cycle) == ringCondition:
+      rings.append(cycles)
       cycles.append([np.array(cycle).astype(int),np.array(base10Cycle)])
-  return(cycles)
+  return(cycles,rings)
 
 # INFO
 # Note, we do not actually _generate_ the tori here, just use the cycle

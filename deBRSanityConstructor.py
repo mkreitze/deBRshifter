@@ -7,11 +7,11 @@ import numpy as np
 # This code mainly just checks the 'all ones' version of a shifter for a specific alphabet size and windowsize. 
 # It checks the linear, and resulting affine case, for both scenarios. Helpful to make sure the code is working as intended
 
-W = (3,3) # defined as (length,width)
-A = 3 # alphabet size
+W = (2,2) # defined as (length,width)
+A = 2 # alphabet size
 PRINTLINEAR = True
-PRINTAFFINE = False
-PRINTAFFINESANITY = False
+PRINTAFFINE = True
+PRINTAFFINESANITY = True
 LONGOUTPUT = False # prints out the windows individually, bad if A,W are bigger than 2
 
 print(f"System for {A};{W}")
@@ -39,7 +39,7 @@ if PRINTLINEAR:
     print(f"All generated cycles for allones shifter")
     print("-----")
     allWindows = deBRConstructor.gen_all_npWindows(A,W) # note windows are in base 10 order read bottom to top
-    onesCycles = deBRConstructor.gen_cycles(onesShifter,allWindows,A,W)
+    onesCycles,onesRings = deBRConstructor.gen_cycles(onesShifter,allWindows,A,W)
     for cycle in onesCycles:
         # prints each cycle as base 10 numbers in list 
         print(f"For Cycle {cycle[1]}:")
@@ -52,7 +52,7 @@ if PRINTLINEAR:
         print(f"Note; cycle is {deBRConstructor.is_cycle_periodic(cycle[0][0],W,A)} periodic")
         print("-----")
 
-    print(f"Power of shifter {deBRConstructor.get_power(onesShifter,A,W,True)}")
+    print(f"Power of shifter {deBRConstructor.get_power(onesShifter,A,W,False)}")
     print("-----")
 
     print(f"Is shifter invertible? {deBRConstructor.is_invert(onesShifter,A)}")
@@ -86,7 +86,7 @@ if PRINTAFFINE:
     print(f"All generated cycles for allones shifter")
     print("-----")
     allWindows = deBRAffConstructor.gen_all_npWindows(A,W) # note windows are in base 10 order read bottom to top
-    onesCycles = deBRAffConstructor.gen_cycles(onesShifter,allWindows,A,W)
+    onesCycles,onesRings = deBRAffConstructor.gen_cycles(onesShifter,allWindows,A,W)
     for cycle in onesCycles:
         # prints each cycle as base 10 numbers in list 
         print(f"For Cycle {cycle[1]}:")
@@ -133,7 +133,7 @@ if PRINTAFFINESANITY:
     print(f"All generated cycles for allones shifter")
     print("-----")
     allWindows = deBRAffConstructor.gen_all_npWindows(A,W) # note windows are in base 10 order read bottom to top
-    onesCycles = deBRAffConstructor.gen_cycles(onesShifter,allWindows,A,W)
+    onesCycles,onesRings = deBRAffConstructor.gen_cycles(onesShifter,allWindows,A,W)
     for cycle in onesCycles:
         # prints each cycle as base 10 numbers in list 
         print(f"For Cycle {cycle[1]}:")
