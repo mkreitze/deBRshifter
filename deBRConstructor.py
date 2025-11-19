@@ -1,10 +1,10 @@
 # ─── Imports ───────────────────────────────────────────────
 import os
-import numpy as np
-import itertools as it
-import sympy as symp # used to determine factors of an integer
+import numpy as np # pyright: ignore[reportMissingImports]
+import itertools as it 
+import sympy as symp # type: ignore # used to determine factors of an integer
 import typing as type # to make functions more clear
-from numpy.typing import NDArray 
+from numpy.typing import NDArray  # pyright: ignore[reportMissingImports]
 import time
 # ───────────────────────────────────────────────────────────
 
@@ -77,7 +77,7 @@ def shifter_gen_combo(W: type.Tuple[int, ...], combo: type.Tuple[int, ...],allCi
 # INFO Note; the output is cycles,rings
 # there MAY be a more efficient way to code this via casting and vectorization.
 # given this is essentially the crux of the computation time, should look into
-def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : int,W : type.Tuple[int,...]) -> type.List[type.List[NDArray[int]]]:
+def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : int,W : type.Tuple[int,...]) -> type.Tuple[type.List[type.List[NDArray[int]]],type.List[type.List[NDArray[int]]]]:
   cycles = []
   rings = []
   ringCondition = get_apNum(A,W)
@@ -102,7 +102,7 @@ def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : 
 def is_cycle_periodic(window: NDArray[int],W: type.Tuple[int, int],A: int) -> bool:
   divisors = symp.divisors(W[1])
   temp = np.reshape(window,(W),order="F") # reshapes original window
-  for divisor in divisors[:-1]:
+  for divisor in divisors[:-1]: # pyright: ignore[reportIndexIssue] # we assume mulitple divisors here
     windowToRoll = np.roll(np.copy(temp),divisor,axis=0) # checks if same
     temp2 = temp-windowToRoll
     if np.all(temp2 == 0):

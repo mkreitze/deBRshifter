@@ -1,11 +1,11 @@
 # ─── Imports ───────────────────────────────────────────────
 import os
-import numpy as np
+import numpy as np # type: ignore
 import itertools as it
-import sympy as symp # used to determine factors of an integer
+import sympy as symp # type: ignore # used to determine factors of an integer
 import deBRConstructor # redundant code: gen_apn, gen_subcircs, window_to_base10
 import typing as type # to make functions more clear
-from numpy.typing import NDArray 
+from numpy.typing import NDArray  # type: ignore
 # ───────────────────────────────────────────────────────────
 
 # AFFINE CODE
@@ -66,7 +66,7 @@ def gen_all_npWindows(A: int,W: type.Tuple[int, ...])-> type.List[NDArray[int]]:
 
 # INFO (can be done with casting, rolling and - but probably not efficient)
 # Literally just changed window_to_base10(tempWindow,A) to deBRConstructor.window_to_base10(tempWindow[:-1],A)
-def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : int,W : type.Tuple[int,...]) -> type.List[type.List[NDArray[int]]]:
+def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : int,W : type.Tuple[int,...]) -> type.Tuple[type.List[type.List[NDArray[int]]],type.List[type.List[NDArray[int]]]]:
   cycles = []
   rings = []
   ringCondition = deBRConstructor.get_apNum(A,W)
@@ -98,7 +98,7 @@ def gen_tori(W: type.Tuple[int,...], cycle: NDArray[int]) -> NDArray[int]:
     deBR[:,i] = temp[:,0] # copys each column of the torus
   return(deBR)
 
-# INFO (true implies invert)
+# INFO
 def get_power(shifter: NDArray[int],A: int,W: type.Tuple[int,...], VERBOSE = False) -> int:
   I = np.eye(W[0]*W[1]+1)
   tempShifter = np.copy(shifter)

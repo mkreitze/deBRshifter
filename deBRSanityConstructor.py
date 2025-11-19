@@ -1,6 +1,6 @@
 import deBRAffConstructor
 import deBRConstructor
-import numpy as np
+import numpy as np # pyright: ignore[reportMissingImports]
 
 
 # INFO

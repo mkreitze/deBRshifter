@@ -1,11 +1,13 @@
 # ─── Imports ───────────────────────────────────────────────
 import tkinter as tk
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-from numpy.typing import NDArray 
+import numpy as np # type: ignore
+import matplotlib.pyplot as plt # type: ignore
+import matplotlib.patches as patches # type: ignore
+from numpy.typing import NDArray  # type: ignore
 # ───────────────────────────────────────────────────────────
 
+# INFO
+# Function to handle search button click
 def search_matrix():
   input_string = entry.get()
   # You can process the input_string here to generate or search matrices
