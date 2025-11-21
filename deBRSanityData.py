@@ -10,4 +10,9 @@ import numpy as np
 W = (2,2) # defined as (length,width)
 A = 2 # alphabet size
 
-deBRDataGen. store_all_linear_shifters(A,W)
+PRINTLINEAR = True
+PRINTAFFINE = True
+PRINTAFFINESANITY = True
+
+if PRINTLINEAR:
+    deBRDataGen. store_all_linear_shifters(A,W,True)

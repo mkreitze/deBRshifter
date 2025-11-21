@@ -3,6 +3,7 @@ import tkinter as tk
 import numpy as np # type: ignore
 import matplotlib.pyplot as plt # type: ignore
 import matplotlib.patches as patches # type: ignore
+import os
 from numpy.typing import NDArray  # type: ignore
 # ───────────────────────────────────────────────────────────
 
@@ -16,7 +17,11 @@ def search_matrix():
 
 # INFO
 #
-def beautify_matrix(matrix : NDArray[int],gridLines : bool = True, border : bool = True, saveImage : bool = False, imageName : str = 'temp.png'):
+def beautify_matrix(matrix : NDArray[int],gridLines : bool = True, border : bool = True, saveImage : bool = False, imageName : str = 'temp.png', seeOutput : bool = False):
+  if os.path.exists("imageName"):
+      print("File exists, not rerendering")
+      return()
+
   fig, ax = plt.subplots()
   ax.imshow(matrix, cmap='grey')
 
@@ -30,9 +35,12 @@ def beautify_matrix(matrix : NDArray[int],gridLines : bool = True, border : bool
     ax.add_patch(rect) # draws rect
   
   if saveImage == True:
-    plt.savefig(f"{imageName}.png", bbox_inches='tight', dpi=300)
+    plt.savefig(f"{imageName}.png", bbox_inches='tight', dpi=matrix[0,:]*matrix[:,0]*100)
   
-  plt.show()
+  if seeOutput == True:
+    plt.show()
+  plt.close()
+  return()
   
 
 if __name__ == '__main__':

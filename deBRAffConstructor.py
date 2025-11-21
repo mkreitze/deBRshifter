@@ -43,11 +43,11 @@ def gen_aff_free(A: int, W: type.Tuple[int, int]) -> NDArray[int]:
 # INFO (IS INEFFICIENT)
 # INPUT: W, combo (subcircs that make up shifter), allCircs (every sub-circ as a numpy array in a list)
 # OUTPUT: shifter (np array with composition in combo)
-def shifter_gen_combo(W: type.Tuple[int, int], comboCirc: type.Tuple[int, ...],comboCol:  NDArray[int], allCircs: type.List[NDArray[int]]) -> NDArray[int]:
+def shifter_gen_combo(W: type.Tuple[int, int], comboCirc: type.Tuple[int, ...],comboCol:  NDArray[int], allSubCircs: type.List[NDArray[int]]) -> NDArray[int]:
   shifter = basic_shifter(W)
   circRow = []
   for subCirc in comboCirc:
-    circRow.append(allCircs[subCirc])
+    circRow.append(allSubCircs[subCirc])
   shifter[-W[0]-1:-1,0:-1] = np.concatenate(circRow,axis = 1) # np is
   shifter[-W[0]-1:-1,-1:] = comboCol # affine column
   return(shifter)

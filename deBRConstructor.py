@@ -66,21 +66,30 @@ def gen_all_npWindows(A: int,W: type.Tuple[int, int])-> type.List[NDArray[int]]:
 # INFO (IS INEFFICIENT)
 # INPUT: W, combo (subcircs that make up shifter), allCircs (every sub-circ as a numpy array in a list)
 # OUTPUT: shifter (np array with composition in combo)
-def shifter_gen_combo(W: type.Tuple[int, ...], combo: type.Tuple[int, ...],allCircs: type.List[NDArray[int]]) -> NDArray[int]:
+def shifter_gen_combo(W: type.Tuple[int, ...], combo: type.Tuple[int, ...],allSubCircs: type.List[NDArray[int]]) -> NDArray[int]:
   shifter = basic_shifter(W)
   circRow = []
   for subCirc in combo:
-    circRow.append(allCircs[subCirc])
+    circRow.append(allSubCircs[subCirc])
   shifter[-W[0]:] = np.concatenate(circRow,axis = 1) # np is
   return(shifter)
 
-# INFO Note; the output is cycles,rings
+# INFO (MORE EFFICIENT)
+# Directly assigns shifter values through array pf subcircs
+def shifter_gen_from_circs(W: type.Tuple[int, ...], circsToInsert: type.List[NDArray[int]]) -> NDArray[int]:
+  shifter = basic_shifter(W)
+  shifter[-W[0]:] = np.concatenate(circsToInsert, axis = 1) # sticks in circ
+  return(shifter)
+
+# INFO: (WE ASSUME AN INVERTIBLE SHIFTER)
 # there MAY be a more efficient way to code this via casting and vectorization.
 # given this is essentially the crux of the computation time, should look into
 def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : int,W : type.Tuple[int,...]) -> type.Tuple[type.List[type.List[NDArray[int]]],type.List[type.List[NDArray[int]]]]:
   cycles = []
   rings = []
   ringCondition = get_apNum(A,W)
+  if not is_invert(shifter,A): # this is really just an idiot check
+    raise ValueError("shifter is not invertible")
   for window in allNpWindows:
     if window[0] != -1:
       cycle = [];base10Cycle=[]
@@ -92,8 +101,8 @@ def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : 
         cycle.append(tempWindow);base10Cycle.append(window_to_base10(tempWindow,A))
         tempWindow = (shifter@tempWindow)%A
       cycles.append([np.array(cycle).astype(int),np.array(base10Cycle)])
-    if len(base10Cycle) == ringCondition:
-      rings.append(cycles)
+      if len(base10Cycle) == ringCondition:
+        rings.append([gen_tori(W,cycle),np.array(base10Cycle)])
       
   return(cycles,rings)
 
@@ -145,7 +154,7 @@ def is_invert(shifter: NDArray[int],A: int) -> bool:
   else:
     return(True)
   
-## HELPER FUNCTINOS BELOW
+## HELPER FUNCTIONS BELOW
 
 # INFO 
 # 
