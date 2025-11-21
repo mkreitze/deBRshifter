@@ -104,7 +104,6 @@ def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : 
       cycles.append([np.array(cycle).astype(int),np.array(base10Cycle)])
       if len(base10Cycle) == ringCondition:
         rings.append([gen_tori(W,cycle),np.array(base10Cycle)])
-        print(gen_tori(W,cycle))
   return(cycles,rings)
 
 # INFO 

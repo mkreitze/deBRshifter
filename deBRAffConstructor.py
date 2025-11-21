@@ -74,16 +74,17 @@ def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : 
   for window in allNpWindows:
     if window[0] != -1:
       cycle = [];base10Cycle=[]
-      cycle.append(window);base10Cycle.append(deBRConstructor.window_to_base10(window[:-1],A))
+      cycle.append(window);base10Cycle.append(deBRConstructor.window_to_base10(window,A))
       tempWindow = np.copy(window)
+      tempWindow2 = np.copy(window)
       tempWindow = (shifter@tempWindow)%A
       while not np.array_equal(tempWindow,window):
-        allNpWindows[deBRConstructor.window_to_base10(tempWindow[:-1],A)][0] = -1
-        cycle.append(tempWindow);base10Cycle.append(deBRConstructor.window_to_base10(tempWindow[:-1],A))
+        allNpWindows[deBRConstructor.window_to_base10(tempWindow,A)][0,0] = -1
+        cycle.append(tempWindow);base10Cycle.append(deBRConstructor.window_to_base10(tempWindow,A))
         tempWindow = (shifter@tempWindow)%A
     if len(base10Cycle) == ringCondition:
-      rings.append(cycles)
-      cycles.append([np.array(cycle).astype(int),np.array(base10Cycle)])
+      if len(base10Cycle) == ringCondition:
+        rings.append([gen_tori(W,cycle),np.array(base10Cycle)])
   return(cycles,rings)
 
 # INFO
