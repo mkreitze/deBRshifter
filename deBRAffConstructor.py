@@ -99,6 +99,7 @@ def gen_tori(W: type.Tuple[int,...], cycle: NDArray[int]) -> NDArray[int]:
   return(deBR)
 
 # INFO
+# 
 def get_power(shifter: NDArray[int],A: int,W: type.Tuple[int,...], VERBOSE = False) -> int:
   I = np.eye(W[0]*W[1]+1)
   tempShifter = np.copy(shifter)
@@ -113,6 +114,7 @@ def get_power(shifter: NDArray[int],A: int,W: type.Tuple[int,...], VERBOSE = Fal
   return(pow)
 
 # INFO (true implies invert)
+# 
 def is_invert(shifter: NDArray[int],A: int) -> bool:
   if (np.linalg.det(shifter)%A) == 0:
     return(False)

@@ -1,6 +1,7 @@
+# ─── Imports ───────────────────────────────────────────────
 import deBRDataGen
 import numpy as np
-
+# ───────────────────────────────────────────────────────────
 
 # INFO
 # This code mainly just checks the 'all ones' version of a shifter for a specific alphabet size and windowsize. 
