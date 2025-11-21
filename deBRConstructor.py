@@ -53,7 +53,7 @@ def subcirc_gen_all(A: int ,W: type.Tuple[int, ...]) -> type.List[NDArray[int]]:
     allCircs.append(C)
   return(allCircs)
 
-# INFO 
+# INFO np details numpy not non periodic 
 # stuff
 def gen_all_npWindows(A: int,W: type.Tuple[int, int])-> type.List[NDArray[int]]:
   windows = it.product(range(A),repeat = W[0]*W[1])
@@ -66,7 +66,7 @@ def gen_all_npWindows(A: int,W: type.Tuple[int, int])-> type.List[NDArray[int]]:
 # INFO (IS INEFFICIENT)
 # INPUT: W, combo (subcircs that make up shifter), allCircs (every sub-circ as a numpy array in a list)
 # OUTPUT: shifter (np array with composition in combo)
-def shifter_gen_combo(W: type.Tuple[int, ...], combo: type.Tuple[int, ...],allSubCircs: type.List[NDArray[int]]) -> NDArray[int]:
+def shifter_gen_combo(W: type.Tuple[int, ...], combo: type.Tuple[int, ...],allSubCircs: type.List[NDArray[int]]) -> NDArray[int]: 
   shifter = basic_shifter(W)
   circRow = []
   for subCirc in combo:
@@ -81,7 +81,7 @@ def shifter_gen_from_circs(W: type.Tuple[int, ...], circsToInsert: type.List[NDA
   shifter[-W[0]:] = np.concatenate(circsToInsert, axis = 1) # sticks in circ
   return(shifter)
 
-# INFO: (WE ASSUME AN INVERTIBLE SHIFTER)
+# INFO: (WE ASSUME AN INVERTIBLE SHIFTER) MAKE SURE YOU SEND IN A COPY OF ALLNPWINDOWS
 # there MAY be a more efficient way to code this via casting and vectorization.
 # given this is essentially the crux of the computation time, should look into
 def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : int,W : type.Tuple[int,...]) -> type.Tuple[type.List[type.List[NDArray[int]]],type.List[type.List[NDArray[int]]]]:
@@ -95,15 +95,16 @@ def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : 
       cycle = [];base10Cycle=[]
       cycle.append(window);base10Cycle.append(window_to_base10(window,A))
       tempWindow = np.copy(window)
+      tempWindow2 = np.copy(window)
       tempWindow = (shifter@tempWindow)%A
-      while not np.array_equal(tempWindow,window):
-        allNpWindows[window_to_base10(tempWindow,A)][0] = -1
+      while not np.array_equal(tempWindow,tempWindow2):
+        allNpWindows[window_to_base10(tempWindow,A)][0,0] = -1
         cycle.append(tempWindow);base10Cycle.append(window_to_base10(tempWindow,A))
         tempWindow = (shifter@tempWindow)%A
       cycles.append([np.array(cycle).astype(int),np.array(base10Cycle)])
       if len(base10Cycle) == ringCondition:
         rings.append([gen_tori(W,cycle),np.array(base10Cycle)])
-      
+        print(gen_tori(W,cycle))
   return(cycles,rings)
 
 # INFO 

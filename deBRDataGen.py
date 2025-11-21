@@ -25,6 +25,7 @@ shiftersFolder = "shifters";os.makedirs(shiftersFolder, exist_ok=True)
 def store_all_linear_shifters(A: int,W: type.Tuple[int,int],beautify : bool = False):
     with open(f"{shiftersFolder}/All linear {A};{W}.txt", "w") as f: # done here to make stuff a bit more legibile
         # makes the data
+        f.write(f"For {A};{W} with APN = {deBRConstructor.get_apNum(A,W)}  TW = {A**(W[0]*W[1])} \n")
         allWindows = deBRConstructor.gen_all_npWindows(A,W)
         allSubCircs = deBRConstructor.subcirc_gen_all(A,W)
         circCombos =  it.product(allSubCircs,repeat = W[1]) 
@@ -36,7 +37,7 @@ def store_all_linear_shifters(A: int,W: type.Tuple[int,int],beautify : bool = Fa
             idx+=1
             print(f"Done {idx} of {maxSize}")
             if deBRConstructor.is_invert(shifter,A): # IMPORTANT gen_cycles assumes the shifter is invertible
-                cycles,rings = deBRConstructor.gen_cycles(shifter,allWindows, A, W) # makes all cycles and rings for a shifter
+                cycles,rings = deBRConstructor.gen_cycles(shifter,np.copy(allWindows), A, W) # makes all cycles and rings for a shifter
                 # stores all cycles
                 f.write(f"Shifter: {intRep} \n")
                 f.write(f"  Cycles:\n")
@@ -61,8 +62,14 @@ def store_all_linear_shifters(A: int,W: type.Tuple[int,int],beautify : bool = Fa
 # 
 # NOTE:
 def store_all_affine_shifters(A: int,W: type.Tuple[int,int],beautify : bool = False):
-    
-    return()
+    with open(f"{shiftersFolder}/All affine {A};{W}.txt", "w") as f: # done here to make stuff a bit more legibile
+        # makes the data
+        allWindows = deBRConstructor.gen_all_npWindows(A,W)
+        allSubCircs = deBRConstructor.subcirc_gen_all(A,W)
+        circCombos =  it.product(allSubCircs,repeat = W[1]) 
+        circIntRep =  it.product(range(A**W[0]),repeat = W[1])
+        affCol = 1
+    return(1) 
 
 # INFO:
 # Deals with cycles that are too long for a human to really parse.

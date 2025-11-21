@@ -17,12 +17,12 @@ def search_matrix():
 
 # INFO
 #
-def beautify_matrix(matrix : NDArray[int],gridLines : bool = True, border : bool = True, saveImage : bool = False, imageName : str = 'temp.png', seeOutput : bool = False):
+def beautify_matrix(matrix : NDArray[int],gridLines : bool = True, border : bool = False, saveImage : bool = False, imageName : str = 'temp.png', seeOutput : bool = False):
   if os.path.exists("imageName"):
       print("File exists, not rerendering")
       return()
 
-  fig, ax = plt.subplots()
+  fig, ax = plt.subplots(figsize=(len(matrix[0,:])*0.2, len(matrix[:,0])*0.2))
   ax.imshow(matrix, cmap='grey')
 
   if gridLines == True:
@@ -31,11 +31,11 @@ def beautify_matrix(matrix : NDArray[int],gridLines : bool = True, border : bool
 
   if border == True:
     rows, cols = matrix.shape # for drawing
-    rect = patches.Rectangle( (-0.5, -0.5), cols, rows, linewidth=10, edgecolor='red', facecolor='none',zorder=2) # defines rect
+    rect = patches.Rectangle( (-0.5, -0.5), cols, rows, linewidth=4, edgecolor='red', facecolor='none',zorder=2) # defines rect
     ax.add_patch(rect) # draws rect
   
   if saveImage == True:
-    plt.savefig(f"{imageName}.png", bbox_inches='tight', dpi=matrix[0,:]*matrix[:,0]*100)
+    plt.savefig(f"{imageName}.png", bbox_inches='tight', dpi=300)
   
   if seeOutput == True:
     plt.show()

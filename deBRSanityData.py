@@ -1,6 +1,8 @@
 # ─── Imports ───────────────────────────────────────────────
 import deBRDataGen
+import deBRConstructor
 import numpy as np
+import itertools as it
 # ───────────────────────────────────────────────────────────
 
 # INFO
@@ -15,4 +17,5 @@ PRINTAFFINE = True
 PRINTAFFINESANITY = True
 
 if PRINTLINEAR:
-    deBRDataGen. store_all_linear_shifters(A,W,True)
+    deBRDataGen.store_all_linear_shifters(A,W,True)
+    
