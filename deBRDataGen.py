@@ -22,7 +22,7 @@ shiftersFolder = "shifters";os.makedirs(shiftersFolder, exist_ok=True)
 #INFO
 # Generates then stores all linear shifters
 # NOTE: We check invertibility first
-def store_all_linear_shifters(A: int,W: type.Tuple[int,int],beautify : bool = False):
+def store_all_linear_shifters(A: int,W: type.Tuple[int,int],beautify : bool = False, genHist : bool = False):
     with open(f"{shiftersFolder}/All linear {A};{W}.txt", "w") as f: # done here to make stuff a bit more legibile
         # makes the data
         f.write(f"For {A};{W} with APN = {deBRConstructor.get_apNum(A,W)}  TW = {A**(W[0]*W[1])} \n")
@@ -47,6 +47,10 @@ def store_all_linear_shifters(A: int,W: type.Tuple[int,int],beautify : bool = Fa
                         toriFolder=f"{shiftersFolder}/All linear {A};{W}/{intRep}";os.makedirs(toriFolder, exist_ok=True)
                         tori = deBRConstructor.gen_tori(W,cycle[0])
                         deBRGraphics.beautify_matrix(tori,imageName = toriFolder+f"/{simplify_name(cycle[1])}",saveImage=True)
+
+                if genHist: #if we want histograms
+                    deBRGraphics.gen_hist_from_cycle(cycles,W,A,imageName = toriFolder+f"/histAll")
+
                 # stores all rings (if they exist)
                 if len(rings)>0:
                     f.write(f"  Rings: \n")

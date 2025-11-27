@@ -1,7 +1,7 @@
 # ─── Imports ───────────────────────────────────────────────
 import deBRDataGen
 import deBRConstructor
-import numpy as np
+import numpy as np # type: ignore
 import itertools as it
 # ───────────────────────────────────────────────────────────
 
@@ -13,9 +13,11 @@ W = (2,2) # defined as (length,width)
 A = 2 # alphabet size
 
 PRINTLINEAR = True
-PRINTAFFINE = True
+PRINTAFFINE = False
 PRINTAFFINESANITY = True
 
 if PRINTLINEAR:
-    deBRDataGen.store_all_linear_shifters(A,W,True)
+    deBRDataGen.store_all_linear_shifters(A,W,beautify=True,genHist=True)
     
+if PRINTAFFINE:
+    deBRDataGen.store_all_affine_shifters(A,W,True)
