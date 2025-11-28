@@ -10,14 +10,14 @@ import itertools as it
 # It checks the linear, and resulting affine case, for both scenarios. Helpful to make sure the code is working as intended
 
 W = (2,2) # defined as (length,width)
-A = 2 # alphabet size
+A = 3 # alphabet size
 
 PRINTLINEAR = True
 PRINTAFFINE = False
 PRINTAFFINESANITY = True
 
 if PRINTLINEAR:
-    deBRDataGen.store_all_linear_shifters(A,W,beautify=True,genHist=True)
+    deBRDataGen.store_all_linear_shifters(A,W,beautify=True,genHist=True,genOneLook=True)
     
 if PRINTAFFINE:
     deBRDataGen.store_all_affine_shifters(A,W,True)

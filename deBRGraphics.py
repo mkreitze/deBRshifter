@@ -44,8 +44,11 @@ def beautify_matrix(matrix : NDArray[int],gridLines : bool = True, border : bool
     plt.show()
   plt.close()
   return()
-  
-def gen_hist_from_cycle(cycles,W: type.Tuple[int,int],A: int,imageName = "temp.png"):
+
+# INFO
+# We return the variance and average of the histogram incase we want the agg data later. Also intRep is unelegantly passed here
+# outputs as [aperodic var, aperodic mean], [periodic var, periodic mean]
+def gen_hist_from_cycle(cycles,W: type.Tuple[int,int],A: int,imageName = "temp.png",intRep: NDArray[int] = (0,0)) -> type.List[float]:
   aperodics = []; periodics = [];aPN=deBRConstructor.get_apNum(A,W)
   for cycle in cycles:
     if deBRConstructor.is_cycle_periodic(cycle[0][0],W,A):
@@ -56,7 +59,7 @@ def gen_hist_from_cycle(cycles,W: type.Tuple[int,int],A: int,imageName = "temp.p
   # makes the hist
   fig, axes = plt.subplots(2, 1, figsize=(6, 8))
   bins = np.arange(0,aPN + 2) - 0.5
-  axes[0].hist(aperodics, bins=bins, color='skyblue', alpha=0.7);  axes[1].hist(periodics, bins=bins, color='salmon', alpha=0.7)
+  axes[0].hist(aperodics, bins=bins, color='blue', alpha=0.7);  axes[1].hist(periodics, bins=bins, color='orange', alpha=0.7)
   axes[0].set_title("Aperodic");  axes[1].set_title("Periodics")
   axes[0].set_xlabel("Cycle Length");  axes[1].set_xlabel("Cycle Length")
   axes[0].set_ylabel("Frequency");  axes[1].set_ylabel("Frequency")
@@ -66,10 +69,27 @@ def gen_hist_from_cycle(cycles,W: type.Tuple[int,int],A: int,imageName = "temp.p
   # Save the figure instead of showing it
   plt.savefig(f"{imageName}.png")  # full path to folder + filename
   plt.close()  # closes the figure so it doesn’t display or overlap with future plots
+  return([intRep,deBRConstructor.window_to_base10(intRep,A**W[1]),np.var(aperodics),np.mean(aperodics),np.var(periodics),np.mean(periodics)])
 
-  return(1)
-
-
+# INFO
+#
+def gen_agg(aggData: type.List[type.List[float]], imageName : str = "aggTemp.png"):
+  xs = [data[1] for data in aggData]
+  aperodicVars = [data[2] for data in aggData]
+  aperodicMeans = [data[3] for data in aggData]
+  periodicVars = [data[4] for data in aggData]
+  periodicMeans = [data[5] for data in aggData]
+  fig, axes = plt.subplots(2, 1, figsize=(6, 8))
+  axes[0].errorbar(xs, aperodicMeans, yerr=aperodicVars, fmt='o', color='blue', ecolor='lightgray', elinewidth=3, capsize=0)
+  axes[0].set_title("Aperodic Cycle Lengths");  axes[0].set_xlabel("Shifter (Base 10)");  axes[0].set_ylabel("Mean Cycle Length with Variance")
+  axes[1].errorbar(xs, periodicMeans, yerr=periodicVars, fmt='o', color='orange', ecolor='lightgray', elinewidth=3, capsize=0)
+  axes[1].set_title("Periodic Cycle Lengths");  axes[1].set_xlabel("Shifter (Base 10)");  axes[1].set_ylabel("Mean Cycle Length with Variance")
+  axes[0].yaxis.set_major_locator(MaxNLocator(integer=True));  axes[1].yaxis.set_major_locator(MaxNLocator(integer=True))
+  plt.tight_layout()
+  plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
+  plt.savefig(f"{imageName}.png")  # full path to folder + filename
+  plt.close()  # closes the figure so it doesn’t display or overlap with future plots
+  return()
 
 if __name__ == '__main__':
   # Create the main window

@@ -159,12 +159,14 @@ def is_invert(shifter: NDArray[int],A: int) -> bool:
 # INFO 
 # 
 def window_to_base10(window: NDArray[int],A: int) -> int:
+  if len(window.shape) == 1:
+    window = window.reshape((-1,1))
   base10 = (A ** np.arange(start = len(window)-1,stop = -1, step = -1))
   return((base10@window).astype(int)[0])  
 
 # INFO outputs vertical vector
 # from copilot. Please review
-def convert_to_base_a(num: int, base: int, n_digits):
+def convert_to_base_a(num: int, base: int, n_digits) -> NDArray[int]:
     if base < 2:
         raise ValueError("Base must be at least 2.")
     if num < 0:

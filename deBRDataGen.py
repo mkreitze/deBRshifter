@@ -16,21 +16,23 @@ from numpy.typing import NDArray  # type: ignore
 # Outputs data onto a file
 
 # for file saving (will make them once imported)
-plotsFolder = "plots";os.makedirs(plotsFolder, exist_ok=True)
 shiftersFolder = "shifters";os.makedirs(shiftersFolder, exist_ok=True)
 
 #INFO
-# Generates then stores all linear shifters
+# Generates then stores all linear shifters, options to make graphical representations via booleans
 # NOTE: We check invertibility first
-def store_all_linear_shifters(A: int,W: type.Tuple[int,int],beautify : bool = False, genHist : bool = False):
+def store_all_linear_shifters(A: int,W: type.Tuple[int,int],beautify : bool = False, genHist : bool = False, genOneLook : bool = False):
+    if not genHist and genOneLook:
+        print("genOneLook requires genHist to be True, setting genHist to True")
+        return(1)
     with open(f"{shiftersFolder}/All linear {A};{W}.txt", "w") as f: # done here to make stuff a bit more legibile
         # makes the data
         f.write(f"For {A};{W} with APN = {deBRConstructor.get_apNum(A,W)}  TW = {A**(W[0]*W[1])} \n")
         allWindows = deBRConstructor.gen_all_npWindows(A,W)
         allSubCircs = deBRConstructor.subcirc_gen_all(A,W)
-        circCombos =  it.product(allSubCircs,repeat = W[1]) 
+        circCombos =  it.product(allSubCircs,repeat = W[1])
         circIntRep =  it.product(range(A**W[0]),repeat = W[1])
-        idx = 0;maxSize = (A**W[0])**W[1]
+        idx = 0;maxSize = (A**W[0])**W[1];aggData = [] # aggData for genOneLook
         # makes and stores all components for shifters
         for circs,intRep in zip(circCombos,circIntRep):
             shifter = deBRConstructor.shifter_gen_from_circs(W,circs) # makes a single shifter
@@ -39,7 +41,7 @@ def store_all_linear_shifters(A: int,W: type.Tuple[int,int],beautify : bool = Fa
             if deBRConstructor.is_invert(shifter,A): # IMPORTANT gen_cycles assumes the shifter is invertible
                 cycles,rings = deBRConstructor.gen_cycles(shifter,np.copy(allWindows), A, W) # makes all cycles and rings for a shifter
                 # stores all cycles
-                f.write(f"Shifter: {intRep} \n")
+                f.write(f"Shifter: {simplify_name(intRep)} \n")
                 f.write(f"  Cycles:\n")
                 for cycle in cycles:
                     f.write(str(len(cycle[1]))+" "+str(cycle[1])+"\n")
@@ -49,7 +51,7 @@ def store_all_linear_shifters(A: int,W: type.Tuple[int,int],beautify : bool = Fa
                         deBRGraphics.beautify_matrix(tori,imageName = toriFolder+f"/{simplify_name(cycle[1])}",saveImage=True)
 
                 if genHist: #if we want histograms
-                    deBRGraphics.gen_hist_from_cycle(cycles,W,A,imageName = toriFolder+f"/histAll")
+                    aggData.append(deBRGraphics.gen_hist_from_cycle(cycles,W,A,imageName = toriFolder+f"/{simplify_name(intRep)}",intRep = np.array(intRep)))
 
                 # stores all rings (if they exist)
                 if len(rings)>0:
@@ -60,6 +62,8 @@ def store_all_linear_shifters(A: int,W: type.Tuple[int,int],beautify : bool = Fa
                         deBRGraphics.beautify_matrix(ring[0],imageName = toriFolder+f"/R {simplify_name(ring[1])}",saveImage=True)
             else: 
                 f.write(f"Cycles for shifter: {intRep} (NOT INVERTIBLE)\n")
+    if genOneLook:
+        deBRGraphics.gen_agg(aggData,imageName = f"{shiftersFolder}/All linear {A};{W}/AggGraph")
     return(1)
 
 # INFO
