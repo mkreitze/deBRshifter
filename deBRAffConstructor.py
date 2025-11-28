@@ -79,7 +79,7 @@ def gen_cycles(shifter: NDArray[int],allNpWindows: type.List[NDArray[int]], A : 
       tempWindow2 = np.copy(window)
       tempWindow = (shifter@tempWindow)%A
       while not np.array_equal(tempWindow,window):
-        allNpWindows[deBRConstructor.window_to_base10(tempWindow,A)][0,0] = -1
+        allNpWindows[deBRConstructor.window_to_base10(tempWindow[:-1],A)][0,0] = -1
         cycle.append(tempWindow);base10Cycle.append(deBRConstructor.window_to_base10(tempWindow,A))
         tempWindow = (shifter@tempWindow)%A
     if len(base10Cycle) == ringCondition:

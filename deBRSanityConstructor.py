@@ -82,7 +82,7 @@ if PRINTAFFINE:
 
     print(f"\n ALLONES AFFINE SHIFTER, COMPOSITION: {tuple(1 for i in range(W[1]))}")
     print("-----")
-    onesShifter = deBRAffConstructor.shifter_gen_combo(W,tuple(1 for i in range(W[1])),np.ones((W[1],1),dtype=int),allSubCircs)
+    onesShifter = deBRAffConstructor.shifter_gen_combo(W,tuple(1 for i in range(W[1])),affFrees[-1],allSubCircs)
     print(onesShifter)
 
     print(f"All generated cycles for allones shifter")
