@@ -115,6 +115,7 @@ def store_all_affine_shifters(A: int,W: type.Tuple[int,int],beautify : bool = Fa
     if genOneLook:
         deBRGraphics.gen_agg(aggData,imageName = f"{shiftersFolder}/All linear {A};{W}/AggGraph")
     return(1)
+
 # INFO:
 # Deals with cycles that are too long for a human to really parse.
 # NOTE: Since we have unique cycles, we are all chill with no rewriting
